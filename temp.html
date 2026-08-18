@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; padding: 20px; }
+        .item { 
+            background: #f4f4f4; 
+            margin: 8px 0; 
+            padding: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-left: 5px solid orange;
+        }
+        .del-btn { 
+            background: #ff4757; 
+            color: white; 
+            border: none; 
+            padding: 5px 10px; 
+            cursor: pointer; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>虹美廚坊 - 菜單管理系統</h2>
+    
+    <input type="text" id="dishName" placeholder="菜名">
+    <input type="number" id="dishPrice" placeholder="價格">
+    <button id="addBtn">新增</button>
+
+    <div id="menuContainer"></div>
+
+    <script>
+        const addBtn = document.getElementById('addBtn');
+        const menuContainer = document.getElementById('menuContainer');
+
+        addBtn.addEventListener('click', function() {
+            const name = document.getElementById('dishName').value;
+            const price = document.getElementById('dishPrice').value;
+
+            if (!name || !price) return;
+
+            // 1. 建立外層容器 div
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item';
+
+            // 2. 設定內容 (包含刪除按鈕)
+            itemDiv.innerHTML = `
+                <span>${name} - $${price}</span>
+                <button class="del-btn">刪除</button>
+            `;
+
+            // 3. 核心原理：幫「刪除按鈕」掛載事件
+            // 這裡使用 remove() 方法直接從 DOM 樹移除自己
+            const delBtn = itemDiv.querySelector('.del-btn');
+            delBtn.onclick = function() {
+                itemDiv.remove(); 
+            };
+
+            // 4. 加入畫面
+            menuContainer.appendChild(itemDiv);
+
+            // 清空輸入
+            document.getElementById('dishName').value = '';
+            document.getElementById('dishPrice').value = '';
+        });
+    </script>
+
+</body>
+</html>

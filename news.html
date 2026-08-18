@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>最新消息 - 虹美廚坊</title>
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <style>
+      /* --- 1. 基礎設定 --- */
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+        font-family:
+          "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+      }
+      body {
+        background-color: #fafafa;
+        color: #333;
+        line-height: 1.6;
+      }
+      #menu_control {
+        display: none;
+      }
+
+      /* --- 2. Header & 導覽列 --- */
+      .header {
+        background-color: #333;
+        height: 65px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      .logo img {
+        height: 45px;
+        vertical-align: middle;
+      }
+      .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        margin: 5px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+      nav {
+        width: 100%;
+        height: calc(100vh - 65px);
+        background-color: rgba(51, 51, 51, 0.95);
+        position: absolute;
+        top: 65px;
+        left: -100%;
+        transition: 0.5s;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(5px);
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 20px;
+        border-bottom: 1px solid #555;
+        text-align: center;
+      }
+      #menu_control:checked ~ .header nav {
+        left: 0;
+      }
+
+      @media screen and (min-width: 768px) {
+        .menu_btn {
+          display: none;
+        }
+        nav {
+          position: static;
+          width: auto;
+          height: auto;
+          flex-direction: row;
+          background-color: transparent;
+        }
+        nav a {
+          border-bottom: none;
+          padding: 0 15px;
+          line-height: 65px;
+          color: #ddd;
+          position: relative;
+        }
+        nav a:hover,
+        nav a.active {
+          color: #ffca28 !important;
+        }
+        nav a::after {
+          content: "";
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          background-color: #ffca28;
+          transition: 0.3s;
+          transform: translateX(-50%);
+        }
+        nav a:hover::after,
+        nav a.active::after {
+          width: 70%;
+        }
+      }
+
+      /* --- 3. 內容樣式 --- */
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 15px;
+      }
+      .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #222;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 50px;
+        height: 4px;
+        background: #ffca28;
+        transform: translateX(-50%);
+      }
+
+      .news-list {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+      .news-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: 0.3s;
+        border: 1px solid #eee;
+      }
+      .news-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .news-img {
+        width: 100%;
+        height: 240px;
+        object-fit: contain;
+        background-color: #f8f8f8;
+        cursor: zoom-in;
+        transition: 0.3s;
+      }
+      .news-img:hover {
+        opacity: 0.9;
+      }
+
+      .news-content {
+        padding: 30px;
+      }
+      .news-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      /* --- 標籤樣式 (同步 index.html) --- */
+      .news-category {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        border-radius: 4px;
+        color: #fff;
+        font-weight: bold;
+        display: inline-block;
+      }
+      .news-category.notice {
+        background-color: #555;
+      } /* 公告灰色 */
+      .news-category.promo {
+        background-color: #ff5722;
+      } /* 優惠橘紅色 */
+      .news-category.menu {
+        background-color: #ffca28;
+        color: #333;
+      } /* 菜單品牌黃 */
+
+      .news-date {
+        color: #999;
+        font-size: 0.9rem;
+      }
+      .news-card h3 {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+        color: #222;
+        font-weight: 700;
+      }
+
+      .click-hint {
+        display: inline-block;
+        background-color: #fffdec;
+        color: #d4a017;
+        padding: 5px 15px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        border: 1px dashed #ffca28;
+      }
+      .news-card p {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      .card-tags {
+        font-size: 0.85rem;
+        color: #ffca28;
+        margin-top: 15px;
+        font-weight: 500;
+      }
+
+      @media screen and (min-width: 768px) {
+        .news-card {
+          flex-direction: row;
+          height: 280px;
+        }
+        .news-img {
+          width: 40%;
+          height: 100%;
+          border-right: 1px solid #eee;
+        }
+        .news-content {
+          width: 60%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+      }
+
+      /* --- 4. 回到頂部、燈箱與 Footer --- */
+      #backToTop {
+        position: fixed;
+        bottom: 30px;
+        right: 25px;
+        width: 50px;
+        height: 50px;
+        background-color: #ffca28;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      #backToTop.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 3000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+        cursor: zoom-out;
+      }
+      .lightbox img {
+        max-width: 90%;
+        max-height: 90%;
+        border: 3px solid #fff;
+        border-radius: 8px;
+        cursor: default;
+      }
+      .footer {
+        background-color: #222;
+        color: #ccc;
+        padding: 50px 0 20px;
+        margin-top: 80px;
+      }
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      .footer-logo {
+        color: #ffca28;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+        font-size: 0.8rem;
+      }
+      /* --- 新增：燈箱右上角關閉按鈕樣式 --- */
+      .close-btn {
+        position: absolute;
+        top: 25px;
+        right: 35px;
+        color: #fff;
+        font-size: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        z-index: 3001;
+      }
+
+      .close-btn:hover {
+        color: #ffca28; /* 滑鼠移過變為品牌黃 */
+        transform: scale(1.1); /* 微微放大增加點擊感 */
+      }
+    </style>
+  </head>
+  <body>
+    <input type="checkbox" id="menu_control" />
+
+    <header class="header">
+      <h1 class="logo">
+        <a href="index.html"
+          ><img src="./image/虹美LOGO長.png" alt="虹美LOGO"
+        /></a>
+      </h1>
+      <label for="menu_control" class="menu_btn"
+        ><div class="hamburger"><span></span><span></span><span></span></div
+      ></label>
+      <nav id="mainNav">
+        <a href="index.html">虹美廚坊</a>
+        <a href="news.html">最新菜單消息</a>
+        <a href="article.html">營養文章</a>
+        <a href="analysis.html">營養成份分析</a>
+        <a href="about.html">關於虹美</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2 class="page-title">最新菜單消息</h2>
+
+      <div class="news-list">
+        <div class="news-card">
+          <img
+            src="./image/虹美菜單午晚餐.jpg"
+            class="news-img"
+            alt="虹美菜單"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-category menu">最新菜單</span>
+              <span class="news-date">2026-01-20</span>
+            </div>
+            <h3>虹美菜單：午晚餐系列</h3>
+            <div class="click-hint">🔍 點擊圖片可放大觀看</div>
+            <p>提供最誠摯的手作美味，健康飲食從這開始！</p>
+            <div class="card-tags">#低油低鹽 #專業營養師調配 #屏東午晚餐</div>
+          </div>
+        </div>
+        <div class="news-card">
+          <img
+            src="./image/虹美菜單早餐.jpg"
+            class="news-img"
+            alt="虹美菜單"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-category menu">最新菜單</span>
+              <span class="news-date">2026-01-20</span>
+            </div>
+            <h3>虹美菜單：早餐系列</h3>
+            <div class="click-hint">🔍 點擊圖片可放大觀看</div>
+            <p>提供最誠摯的手作美味，健康飲食從這開始！</p>
+            <div class="card-tags">#低油低鹽 #專業營養師調配 #屏東早餐</div>
+          </div>
+        </div>
+
+        <div class="news-card">
+          <img
+            src="./image/韭菜水餃.jpg"
+            class="news-img"
+            alt="優惠活動"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta"></div>
+            <h3>【新品上市】冷凍韭菜豬肉水餃</h3>
+            <div class="click-hint">🔍 點擊圖片查看詳情</div>
+            <p>
+              忙碌的一天裡，無論是午休的短暫片刻，還是下班後想好好吃頓飯的時候
+              熱呼呼的水餃總能帶來最單純的滿足。
+              經過數月研發，虹美廚坊全新推出——冷凍韭菜豬肉水餃。 嚴選鮮脆韭菜 ×
+              肥瘦比例恰到好處的豬肉 保留食材自然的鮮甜與香氣。
+              而且和市售手工韭菜水餃相比： ✔ 脂肪減少 20–39% ✔ 熱量減少 14%
+              簡單、溫熱、剛剛好。🙌
+            </p>
+          </div>
+        </div>
+        <div class="news-card">
+          <img
+            src="./image/買5就送.jpg"
+            class="news-img"
+            alt="優惠活動"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-category promo">優惠活動</span>
+              <span class="news-date">2026-01-20</span>
+            </div>
+            <h3>健康餐盒揪團趣！屏東市區滿 5 個免費外送</h3>
+            <div class="click-hint">🔍 點擊圖片查看詳情</div>
+            <p>
+              📅 自 115年1月1日起(限屏東市地區) 🥗 健康餐盒
+              一次訂購5盒以上➜免費外送 吃得聰明，身體才會乖乖聽話🧠🍎 非常適合👇
+              ✔機關 ✔團體 ✔公司行號，揪同事、揪朋友，一起吃得健康又安心 ✨
+              除了健康餐盒，我們還有養生饅頭以及營養滿滿的綠拿鐵
+              通通可以一起外送，一次補足健康能量！ 📞 預購電話：08-7385101
+              健康飲食，就從虹美廚坊開始！歡迎預訂，揪團訂起來吧 🙌
+            </p>
+            <div class="card-tags">#揪團外送 #屏東市區免運</div>
+          </div>
+        </div>
+        <div class="news-card">
+          <img
+            src="./image/虹美手工饅頭買10送2.jpg"
+            class="news-img"
+            alt="優惠活動"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-category promo">優惠活動</span>
+              <span class="news-date">2026-01-20</span>
+            </div>
+            <h3>🔥手工饅頭開賣🔥</h3>
+            <div class="click-hint">🔍 點擊圖片查看詳情</div>
+            <p>
+              基於饅頭口味與食品安全的考量，我們目前都採密封包裝喔 😊 📍
+              豐榮街門市 📞08-7385101 冷凍饅頭 六入一組，售價189
+              元，暫不提供單顆販售，敬請見諒。 📍 廣東路早餐部門 📞08-7361660
+              👉現蒸饅頭可單顆購買，但數量依現場供應為主，建議先到現場或來電詢問。
+              ✨ 低糖｜高纖｜無添加 📩 私訊詢問口味與數量 ⚠️
+              每天手工製作，數量不多，賣完為止
+            </p>
+            <div class="card-tags">#揪團外送 #屏東市區免運</div>
+          </div>
+        </div>
+        <div class="news-card">
+          <img
+            src="./image/六入公告.jpg"
+            class="news-img"
+            alt="公告"
+            onclick="openLightbox(this.src)" />
+          <div class="news-content">
+            <div class="news-meta">
+              <span class="news-category notice">公告</span>
+              <span class="news-date">2026-01-20</span>
+            </div>
+            <h3>饅頭統一採密封袋裝販售（6入／袋）口味恕不混搭</h3>
+            <div class="click-hint">🔍 點擊圖片查看詳情</div>
+            <p>
+              為確保食品安全與衛生，至即日起饅頭統一採密封袋裝販售（6
+              入／袋），口味恕不混搭，亦不提供單顆零售。
+              敬請見諒，感謝您的理解與配合 🙏
+            </p>
+            <div class="card-tags">#重要公告 #虹美服務</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-logo">虹美餐飲</div>
+        <p>專業營養調配，照護您的每一餐。</p>
+      </div>
+      <div class="footer-bottom">© 2026 虹美餐飲 版權所有</div>
+    </footer>
+
+    <button id="backToTop">↑</button>
+
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+      <span class="close-btn">&times;</span>
+      <img
+        id="lightbox-img"
+        src=""
+        alt="放大圖"
+        onclick="event.stopPropagation()" />
+    </div>
+
+    <script>
+      // 1. 強健型導覽列 Active 判斷
+      window.addEventListener("DOMContentLoaded", () => {
+        const currentPath = decodeURI(window.location.pathname).toLowerCase();
+        const navLinks = document.querySelectorAll("#mainNav a");
+
+        navLinks.forEach((link) => {
+          const linkHref = link
+            .getAttribute("href")
+            .toLowerCase()
+            .replace("./", "");
+          if (linkHref === "index.html") {
+            if (
+              currentPath.endsWith("/") ||
+              currentPath.includes("index.html") ||
+              currentPath === ""
+            ) {
+              link.classList.add("active");
+            }
+          } else if (linkHref) {
+            const keyword = linkHref.split(".")[0];
+            if (currentPath.includes(keyword)) {
+              link.classList.add("active");
+            }
+          }
+        });
+
+        const menuControl = document.getElementById("menu_control");
+        navLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            menuControl.checked = false;
+          });
+        });
+      });
+
+      // 2. 回到頂部功能
+      const btnTop = document.getElementById("backToTop");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+          btnTop.classList.add("show");
+        } else {
+          btnTop.classList.remove("show");
+        }
+      });
+      btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // 3. 燈箱功能
+      function openLightbox(imgSrc) {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        lightboxImg.src = imgSrc;
+        lightbox.style.display = "flex";
+        document.body.style.overflow = "hidden";
+      }
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        lightbox.style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+    </script>
+  </body>
+</html>
