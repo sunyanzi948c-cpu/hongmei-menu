@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>營養文章 - 虹美廚坊</title>
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <style>
+      /* --- 1. 基礎設定 --- */
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+        font-family:
+          "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+      }
+      body {
+        background-color: #fafafa;
+        color: #333;
+        line-height: 1.6;
+      }
+      #menu_control {
+        display: none;
+      }
+
+      /* --- 2. 導覽列 --- */
+      .header {
+        background-color: #333;
+        height: 65px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      .logo img {
+        height: 45px;
+        vertical-align: middle;
+      }
+      .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        margin: 5px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+      nav {
+        width: 100%;
+        height: calc(100vh - 65px);
+        background-color: rgba(51, 51, 51, 0.95);
+        position: absolute;
+        top: 65px;
+        left: -100%;
+        transition: 0.5s;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(5px);
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 20px;
+        border-bottom: 1px solid #555;
+        text-align: center;
+      }
+      #menu_control:checked ~ .header nav {
+        left: 0;
+      }
+
+      @media screen and (min-width: 768px) {
+        .menu_btn {
+          display: none;
+        }
+        nav {
+          position: static;
+          width: auto;
+          height: auto;
+          flex-direction: row;
+          background-color: transparent;
+        }
+        nav a {
+          border-bottom: none;
+          padding: 0 15px;
+          line-height: 65px;
+          color: #ddd;
+          position: relative;
+        }
+        nav a:hover,
+        nav a.active {
+          color: #ffca28 !important;
+        }
+        /* 1. 當選中或滑鼠移入時，讓底線伸長 */
+        nav a.active::after,
+        nav a:hover::after {
+          width: 70% !important;
+        }
+
+        /* 2. 底線的基礎設定（預設寬度為 0） */
+        nav a::after {
+          content: "";
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          background-color: #ffca28;
+          transition: 0.3s;
+          transform: translateX(-50%);
+        }
+      }
+
+      /* --- 3. 文章列表與篩選控制 --- */
+      .container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 0 15px;
+      }
+      .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin-bottom: 40px;
+        color: #222;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 50px;
+        height: 4px;
+        background: #ffca28;
+        transform: translateX(-50%);
+      }
+
+      .filter-wrapper {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 40px;
+      }
+      .filter-btn {
+        padding: 8px 22px;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: 0.3s;
+        font-size: 0.95rem;
+        color: #666;
+      }
+      .filter-btn:hover,
+      .filter-btn.active {
+        background: #ffca28;
+        border-color: #ffca28;
+        color: #333;
+        font-weight: bold;
+      }
+
+      .article-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        min-height: 400px;
+      }
+
+      .article-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: 0.4s;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #eee;
+        text-decoration: none;
+        color: inherit;
+      }
+      .article-card.hide {
+        display: none;
+      }
+      .article-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .article-img {
+        width: 100%;
+        height: 220px;
+        overflow: hidden;
+        background: #f4f4f4;
+      }
+      .article-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s;
+      }
+
+      .article-info {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      .article-category-tag {
+        font-size: 0.8rem;
+        color: #ff9800;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .article-info h3 {
+        font-size: 1.25rem;
+        color: #222;
+        margin-bottom: 12px;
+        line-height: 1.5;
+      }
+      .article-excerpt {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        white-space: pre-line;
+      }
+
+      .article-footer {
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #999;
+        font-size: 0.85rem;
+      }
+
+      @media screen and (min-width: 768px) {
+        .article-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media screen and (min-width: 992px) {
+        .article-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* --- 4. 分頁樣式優化 --- */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px; /* 按鈕間距 */
+        margin: 50px 0;
+        flex-wrap: wrap; /* 手機版按鈕太多時自動換行，避免擠壓變形 */
+      }
+
+      .page-link {
+        /* 關鍵：固定寬高確保圓形或正方形不變形 */
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        border: 1px solid #ddd;
+        text-decoration: none;
+        color: #666;
+        border-radius: 6px; /* 稍微圓角比較精緻 */
+        transition: 0.3s;
+        background: #fff;
+        font-size: 0.9rem;
+        font-weight: bold;
+        user-select: none; /* 防止快速點擊時選中文字 */
+      }
+
+      /* 針對「上一頁/下一頁」文字按鈕，放寬寬度限制 */
+      .page-link:first-child,
+      .page-link:last-child {
+        width: auto;
+        padding: 0 15px;
+      }
+
+      .page-link.active {
+        background: #333;
+        color: #ffca28;
+        border-color: #333;
+      }
+
+      .page-link.disabled {
+        background-color: #f5f5f5;
+        color: #ccc;
+        pointer-events: none;
+        border-color: #eee;
+      }
+
+      /* 電腦版滑鼠移入效果 */
+      @media screen and (min-width: 768px) {
+        .page-link:hover:not(.active):not(.disabled) {
+          border-color: #ffca28;
+          color: #ffca28;
+          background-color: #fff9e6;
+        }
+      }
+
+      #backToTop {
+        position: fixed;
+        bottom: 30px;
+        right: 25px;
+        width: 50px;
+        height: 50px;
+        background-color: #ffca28;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        z-index: 2000;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+      #backToTop.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .footer {
+        background-color: #222;
+        color: #ccc;
+        padding: 50px 0 20px;
+        margin-top: 80px;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 20px;
+        border-top: 1px solid #333;
+        padding-top: 20px;
+        font-size: 0.8rem;
+      }
+      /* 燈箱背景 */
+      .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: none; /* 預設隱藏 */
+        justify-content: center;
+        align-items: center;
+        z-index: 10001;
+        cursor: zoom-out;
+      }
+
+      /* 放大後的圖片 */
+      .lightbox-overlay img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 8px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        animation: zoomIn 0.3s ease;
+      }
+
+      @keyframes zoomIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <input type="checkbox" id="menu_control" />
+
+    <header class="header">
+      <h1 class="logo">
+        <a href="index.html"
+          ><img src="./image/虹美LOGO長.png" alt="虹美LOGO"
+        /></a>
+      </h1>
+      <label for="menu_control" class="menu_btn">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+      </label>
+      <nav id="mainNav">
+        <a href="index.html">虹美廚坊</a>
+        <a href="news.html">最新菜單消息</a>
+        <a href="article.html">營養文章</a>
+        <a href="analysis.html">營養成份分析</a>
+        <a href="about.html">關於虹美</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2 class="page-title">營養文章</h2>
+
+      <div class="filter-wrapper">
+        <button class="filter-btn active" data-filter="all">全部文章</button>
+        <button class="filter-btn" data-filter="研究">研究文章</button>
+        <button class="filter-btn" data-filter="觀念">小短文</button>
+        <button class="filter-btn" data-filter="百科">食材百科</button>
+      </div>
+
+      <div class="article-grid" id="articleGrid">
+        <a
+          href="https://www.facebook.com/photo/?fbid=1075786264338224&set=a.568881351695387"
+          target="_blank"
+          class="article-card"
+          data-category="觀念">
+          <div class="article-img">
+            <img
+              src="./image/冬日暖心熱飲推薦.jpg"
+              alt="冬日暖心熱飲推薦"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">小短文 | 生活健康</span>
+            <h3>【冬日暖心熱飲推薦❄️】</h3>
+            <p class="article-excerpt">
+              🥰早餐部貼心為大家準備各種暖心熱飲，無論你是喜歡香濃的
+              芝麻豆漿、滑順的 杏仁豆漿，還是選擇 無糖豆漿 或
+              微甜豆漿，這裡通通都有～🥛
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span>
+              <span style="color: #ffca28; font-weight: bold">閱讀全文 →</span>
+            </div>
+          </div>
+        </a>
+        <a
+          href="https://www.facebook.com/HomeMadePintung/posts/pfbid0G2zPu3m8Jq7tGYkWmT5Az3bM8miEt4tSbYVLPqAjQHjuqDrioH6PfQSDDbz6fW3cl?rdid=BkzVf60IxWsxo5Li#"
+          target="_blank"
+          class="article-card"
+          data-category="觀念">
+          <div class="article-img">
+            <img
+              src="./image/十字花科蔬菜.jpg"
+              alt="冬日暖心熱飲推薦"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">小短文 | 生活健康</span>
+            <h3>【冬日暖心熱飲推薦❄️】</h3>
+            <p class="article-excerpt">
+              🍀 #十字花科蔬菜的健康密碼 🍀 文 / 黃怡萱營養師
+              你餐桌上的高麗菜、青花菜、白花椰菜，其實都是默默守護健康的
+              #十字花科蔬菜！
+              它們富含硫代葡萄糖苷、纖維、維生素C與K，切開或烹調後會轉化成對身體有益的活性物質✨
+              💚 多吃的好處 ✔ 有助心臟健康、降低發炎 ✔
+              可能降低癌症風險（仍需更多研究） ✔ 促進腸道好菌、幫助消化 ✔
+              保護大腦、支持認知健康 ✔ 低熱量高纖維，幫助體重管理 👩‍⚕️ 小提醒
+              甲狀腺功能低下者避免大量「生食」，服用抗凝血藥物者可先諮詢醫師。
+              🥦
+              日常小改變：炒青花菜、加高麗菜沙拉、湯裡放蘿蔔或小白菜，美味又健康！
+              小小一份 #十字花科蔬菜，就是給身體最溫柔的照顧 💕
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span>
+              <span style="color: #ffca28; font-weight: bold">閱讀全文 →</span>
+            </div>
+          </div>
+        </a>
+        <a
+          href="https://www.facebook.com/HomeMadePintung/posts/pfbid02v1ox6QdGZ2GzFhNpntkTtoS3cUFpGPxD9Y3VLe1Q2EohHSCRgf68kXuARcPnfacl?rdid=N9e6DyI1SOrtcljb#"
+          target="_blank"
+          class="article-card"
+          data-category="觀念">
+          <div class="article-img">
+            <img src="./image/吃肌補雞.jpg" alt="吃雞補肌" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">小短文 | 生活健康</span>
+            <h3>【冬日暖心熱飲推薦❄️】</h3>
+            <p class="article-excerpt">
+              💪 吃雞補肌，健康也可以很美味！ 🍗 大烤雞腿 & 蔥燒雞腿
+              不是炸的，是烘烤的✨ 油脂少、負擔低，吃得清爽又安心～ ✔
+              富含鋅＋維生素 B 群 ✔ 香草、檸檬、蒜頭天然調味 ✔
+              有精神、有滿足感，完全不罪惡 💛 小撇步：去皮吃 油脂更低、熱量再
+              DOWN！ 🔥 大烤雞腿加碼亮點 每份含 43.7g 高蛋白，補體力、助修復，
+              運動後或忙碌一天都超適合 🍗
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span>
+              <span style="color: #ffca28; font-weight: bold">閱讀全文 →</span>
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/2024年最佳糖尿病飲食.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/2024 年最佳糖尿病飲食.png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>2024年最佳糖尿病飲食</h3>
+            <p class="article-excerpt">
+              美國新聞與世界報導（U.S. News & World Report）選出 2024 年 最佳 10
+              種糖尿病飲食榜單(Best Diabetes Diets 2024 top 10)，分別為
+              地中海飲食、得舒飲食、彈性素食飲食、麥得飲食、純素飲食、體重觀
+              察者飲食、梅約診所飲食、生酮飲食(The Ketogenic Diet)、奧尼什飲
+              食(Ornish Diet)及原始飲食(The Paleo Diet)。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/一日之計在於晨-早餐的重要性.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/一日之計在於晨.png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>一日之計在於晨-早餐的重要性</h3>
+            <p class="article-excerpt">
+              我國先賢長期觀察自然韻律，認為，「日出而作、日落而息」是健康的生活方式，就是指遵循自然生活法則，其實，這就是現代科學發現的「生理時鐘」。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/麥得飲食.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/麥得飲食 (MIND diet).png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>麥得飲食(MIND diet)</h3>
+            <p class="article-excerpt">
+              這是一種經過科學驗證的飲食計劃，旨在保護大腦功能並預防神經退化性疾病，包括與年齡相關的認知能力下降和失智症。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/超級食物.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/超級食物.png" alt="文章標題" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>超級食物 Super foods-2024</h3>
+            <p class="article-excerpt">
+              超級食物（superfoods）並非嚴格的科學分類，而是指某些富含營養且具有功能性健康益處的天然食物。這些食物通常富含抗氧化劑、維生素、礦物質、纖維及其他生物活性化合物，如多酚和不飽和脂肪酸。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/綠拿鐵.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/綠拿鐵.png" alt="文章標題" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>綠拿鐵冰沙營養學和毒物學觀點</h3>
+            <p class="article-excerpt">
+              綠拿鐵冰沙（Green
+              Smoothie）是一種將新鮮綠色蔬菜和水果加水，用攪拌機混合而成的飲品，富含維生素、礦物質和纖維等多種對身體有益的成分，現已成為流行的蔬果冰沙。如何兼顧健康與安全，在選擇配料時需要注意一些事項。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/彈性素食飲食法.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/彈性(半)素食.png" alt="文章標題" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>彈性(半)素食</h3>
+            <p class="article-excerpt">
+              彈性素食（F l e x i t a r i a n ）又 稱 為半 素食 （ S e m i - v e
+              g e t a r i a n ） ，就 是 指 在 一 週 中 有 一 天 或 以 上 不 食
+              用 肉 類 。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/赤藻糖醇文章.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/赤藻糖醇建議食用嗎.png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>赤藻糖醇建議食用嗎</h3>
+            <p class="article-excerpt">
+              赤藻糖醇於多項文獻中被指出能夠做為精緻醣類替代品，因其對於血糖波動及胰島素產生沒有影響，並能促進腸道激素分泌，調節飽食中樞增加飽足感達到減重效果。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/抹茶的營養成分及生理功效.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/抹茶的營養成分及生理功效.png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>抹茶的營養成分及生理功效</h3>
+            <p class="article-excerpt">
+              抹茶以其抗氧化和抗發炎特性而聞名，主要是含有兒茶素 EGCG。已有多項
+              實驗研究報告，發現抹茶對人類健康有益的影響。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="./pdf/得舒飲食.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/得舒飲食.png" alt="文章標題" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>得舒飲食（DASH）</h3>
+            <p class="article-excerpt">
+              得舒飲食與低碳飲食、地中海飲食都被美國糖尿病學會認為是有助於血糖控制飲食模式之一。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="./pdf/第二型糖尿病友建議的飲食模式.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img
+              src="./image/第二型糖尿病友建議的飲食模式.png"
+              alt="文章標題"
+              loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 分類標籤</span>
+            <h3>第二型糖尿病友建議的飲食模式</h3>
+            <p class="article-excerpt">
+              對第 二型糖尿病友有益的四種飲食模式，飲食內容中其共同 特色 為 含
+              有 較 多 種 類 的 植 物 性 食 品 ， 包 括 蔬 菜、豆 類、全 穀
+              類、水 果、堅果，以及含有較多不
+              飽和油脂攝取，避免動物性肉類和過度加工食品
+              。由專業醫師或營養師指導，
+              適當限制個人攝取總量，管理體重才能達到有助疾病控制。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 / 虹美廚坊 整理</span>
+              <span style="color: #ff5722; font-weight: bold"
+                ><i class="fas fa-file-pdf"></i> 線上閱讀 →</span
+              >
+            </div>
+          </div>
+        </a>
+        <a
+          href="./pdf/抹茶的營養成分及生理功效.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/抹茶的營養成分及生理功效.png" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 超級食物</span>
+            <h3>抹茶的營養成分及生理功效</h3>
+            <p class="article-excerpt">
+              抹茶含有高濃度的兒茶素與胺基酸。本研究探討抹茶如何透過抗氧化作用提升人體免疫力與代謝健康。
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span
+              ><span style="color: #ff5722; font-weight: bold">線上閱讀 →</span>
+            </div>
+          </div>
+        </a>
+
+        <a
+          href="./pdf/地中海飲食.pdf"
+          target="_blank"
+          class="article-card"
+          data-category="研究">
+          <div class="article-img">
+            <img src="./image/地中海飲食.png" loading="lazy" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">研究文章 | 健康模式</span>
+            <h3>地中海飲食指南</h3>
+            <p class="article-excerpt">
+              備受 WHO 推崇的飲食方式，強調優質油脂與原型食物。本篇 PDF
+              深入解析其對心血管健康的正面影響。
+            </p>
+            <div class="article-footer">
+              <span>李氏聯合診所 整理</span
+              ><span style="color: #ff5722; font-weight: bold">線上閱讀 →</span>
+            </div>
+          </div>
+        </a>
+
+        <div class="article-card" data-category="百科">
+          <div
+            class="article-img"
+            onclick="openLightbox('./image/進擊的虹美-葵花油.png')">
+            <img
+              src="./image/進擊的虹美-葵花油.png"
+              alt="葵花油營養"
+              loading="lazy"
+              style="cursor: zoom-in" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">食材百科 | 優質油脂</span>
+            <h3>葵花油 / 芥花油</h3>
+            <p class="article-excerpt">
+              葵花油富含維生素 E
+              與不飽和脂肪酸，能維持細胞膜完整性並具抗氧化作用；芥花油則含較多
+              Omega-3，有助於調節生理機能與心血管保健。
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span>
+              <span style="color: #4caf50; font-weight: bold"
+                >點圖放大觀看 →</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card" data-category="百科">
+          <div
+            class="article-img"
+            onclick="openLightbox('./image/鯖魚百科.jpg')">
+            <img
+              src="./image/鯖魚百科.jpg"
+              alt="鯖魚的好處"
+              loading="lazy"
+              style="cursor: zoom-in" />
+          </div>
+          <div class="article-info">
+            <span class="article-category-tag">食材百科 | 優質油脂</span>
+            <h3>鯖魚的好處</h3>
+            <p class="article-excerpt">
+              🐟 鯖魚真的超級營養！ DHA、EPA
+              通通都有，能幫助提升記憶力、保護心臟、還能讓心情更放鬆。 📌
+              簡單吃法建議： ・一週 2–3 次（手掌大小就好） ・少油少鹽最健康
+              ・烤的、味噌煮、紅燒都 OK！ 好吃又顧健康，鯖魚真的可以多吃一點 ❤️
+            </p>
+            <div class="article-footer">
+              <span>虹美廚坊 整理</span>
+              <span style="color: #4caf50; font-weight: bold"
+                >點圖放大觀看 →</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-bottom">© 2026 虹美餐飲 版權所有</div>
+    </footer>
+
+    <button id="backToTop">↑</button>
+
+    <script>
+      // --- 分頁與篩選邏輯 ---
+      const itemsPerPage = 6; // 每頁顯示數量
+      let currentPage = 1;
+      let filteredCards = [];
+
+      const allCards = Array.from(document.querySelectorAll(".article-card"));
+      const paginationWrapper = document.getElementById("pagination");
+      const filterBtns = document.querySelectorAll(".filter-btn");
+
+      function updateDisplay() {
+        // 先隱藏所有
+        allCards.forEach((card) => card.classList.add("hide"));
+
+        // 顯示當前頁面範圍
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const cardsToShow = filteredCards.slice(start, end);
+
+        cardsToShow.forEach((card) => card.classList.remove("hide"));
+        renderPagination();
+      }
+
+      function renderPagination() {
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage);
+        paginationWrapper.innerHTML = "";
+        if (totalPages <= 1) return;
+
+        // 上一頁
+        const prev = document.createElement("a");
+        prev.className = `page-link ${currentPage === 1 ? "disabled" : ""}`;
+        prev.innerText = "上一頁";
+        prev.onclick = (e) => {
+          e.preventDefault();
+          if (currentPage > 1) {
+            currentPage--;
+            updateDisplay();
+            goToTop();
+          }
+        };
+        paginationWrapper.appendChild(prev);
+
+        // 頁碼
+        for (let i = 1; i <= totalPages; i++) {
+          const link = document.createElement("a");
+          link.className = `page-link ${i === currentPage ? "active" : ""}`;
+          link.innerText = i;
+          link.onclick = (e) => {
+            e.preventDefault();
+            currentPage = i;
+            updateDisplay();
+            goToTop();
+          };
+          paginationWrapper.appendChild(link);
+        }
+
+        // 下一頁
+        const next = document.createElement("a");
+        next.className = `page-link ${currentPage === totalPages ? "disabled" : ""}`;
+        next.innerText = "下一頁";
+        next.onclick = (e) => {
+          e.preventDefault();
+          if (currentPage < totalPages) {
+            currentPage++;
+            updateDisplay();
+            goToTop();
+          }
+        };
+        paginationWrapper.appendChild(next);
+      }
+
+      function goToTop() {
+        window.scrollTo({ top: 350, behavior: "smooth" });
+      }
+
+      // 篩選事件
+      filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          filterBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          const val = btn.getAttribute("data-filter");
+
+          filteredCards =
+            val === "all"
+              ? allCards
+              : allCards.filter((c) => c.getAttribute("data-category") === val);
+          currentPage = 1;
+          updateDisplay();
+        });
+      });
+
+      // 初始化
+      window.addEventListener("DOMContentLoaded", () => {
+        filteredCards = allCards;
+        updateDisplay();
+
+        // --- 強化版的導覽列 Active 判斷 ---
+        // 取得當前網址路徑並去除結尾斜線，轉小寫
+        const currentPath = window.location.pathname
+          .replace(/\/$/, "")
+          .toLowerCase();
+        const navLinks = document.querySelectorAll("#mainNav a");
+
+        navLinks.forEach((link) => {
+          // 取得 href 並去除 .html 後綴來比對
+          let linkHref = link.getAttribute("href").toLowerCase();
+          let linkClean = linkHref.replace(".html", "");
+
+          // 移除舊有類別
+          link.classList.remove("active");
+
+          // 判斷邏輯：
+          // 1. 如果網址包含該檔名 (例如 /article 包含 article)
+          // 2. 或是首頁特殊處理
+          if (currentPath.endsWith(linkClean)) {
+            link.classList.add("active");
+          }
+          // 針對首頁的例外處理
+          else if (
+            (currentPath === "" || currentPath.includes("index")) &&
+            linkClean === "index"
+          ) {
+            link.classList.add("active");
+          }
+        });
+      });
+
+      // 回到頂部按鈕
+      const btnTop = document.getElementById("backToTop");
+      window.addEventListener("scroll", () => {
+        btnTop.classList.toggle("show", window.scrollY > 400);
+      });
+      btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+      // 1. 建立燈箱 HTML 並放入 body
+      const lightboxHTML = `
+  <div id="imageLightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <img id="lightboxImg" src="" alt="放大圖片">
+  </div>
+`;
+      document.body.insertAdjacentHTML("beforeend", lightboxHTML);
+
+      // 2. 開啟燈箱函數
+      function openLightbox(imgSrc) {
+        const lightbox = document.getElementById("imageLightbox");
+        const img = document.getElementById("lightboxImg");
+        img.src = imgSrc;
+        lightbox.style.display = "flex";
+      }
+
+      // 3. 關閉燈箱函數
+      function closeLightbox() {
+        document.getElementById("imageLightbox").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

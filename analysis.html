@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>專業營養分析 - 虹美廚坊</title>
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <style>
+      /* --- 1. 基礎設定 --- */
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+        font-family:
+          "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+      }
+      body {
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      #menu_control {
+        display: none;
+      }
+
+      /* --- 2. Header & 導覽列 (短底線與發光整合) --- */
+      .header {
+        background-color: #333;
+        height: 65px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .logo img {
+        height: 40px;
+        vertical-align: middle;
+      }
+
+      .hamburger {
+        cursor: pointer;
+        display: block;
+      }
+      .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        margin: 5px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+
+      nav {
+        width: 100%;
+        height: calc(100vh - 65px);
+        background-color: rgba(51, 51, 51, 0.98);
+        position: absolute;
+        top: 65px;
+        left: -100%;
+        transition: 0.5s;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(5px);
+        z-index: 999;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 20px;
+        border-bottom: 1px solid #444;
+        text-align: center;
+        font-size: 1.1rem;
+      }
+
+      #menu_control:checked ~ .header nav {
+        left: 0;
+      }
+
+      @media screen and (min-width: 768px) {
+        .hamburger {
+          display: none;
+        }
+        nav {
+          position: static;
+          width: auto;
+          height: auto;
+          flex-direction: row;
+          background-color: transparent;
+        }
+        nav a {
+          color: #ddd;
+          padding: 0 15px;
+          line-height: 65px;
+          border-bottom: none;
+          font-size: 1rem;
+          position: relative;
+        }
+        nav a:hover,
+        nav a.active {
+          color: #ffca28;
+        }
+
+        /* 導覽列選中狀態的短底線 */
+        nav a::after {
+          content: "";
+          position: absolute;
+          bottom: 12px;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          background-color: #ffca28;
+          transition: 0.3s ease;
+          transform: translateX(-50%);
+        }
+        nav a.active::after,
+        nav a:hover::after {
+          width: 60%;
+        }
+      }
+
+      /* --- 3. 頁面標題與裝飾線修正 --- */
+      .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 0 15px;
+      }
+      .section-header {
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      .page-title {
+        font-size: 1.8rem;
+        color: #222;
+        position: relative;
+        padding-bottom: 12px;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+      /* 標題下方小黃線調整為更精緻的長度 */
+      .page-title::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 35px; /* 縮小寬度使其更精緻 */
+        height: 4px;
+        background: #ffca28;
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+
+      /* --- 4. 篩選按鈕 (發光效果整合) --- */
+      .filter-wrapper {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .filter-btn {
+        padding: 6px 18px;
+        border: 1px solid #ddd;
+        background: #fff;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        color: #666;
+        outline: none;
+      }
+
+      @media screen and (min-width: 768px) {
+        .filter-btn:hover {
+          background-color: #ffca28;
+          color: #333;
+          border-color: #ffca28;
+          box-shadow: 0 0 15px rgba(255, 202, 40, 0.7); /* 黃色發光效果 */
+          transform: translateY(-3px); /* 向上浮動 */
+        }
+      }
+      .filter-btn.active {
+        background: #ffca28;
+        border-color: #ffca28;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 2px 10px rgba(255, 202, 40, 0.4);
+      }
+
+      /* --- 5. 搜尋框與卡片網格 --- */
+      .search-container {
+        margin-bottom: 30px;
+      }
+      #searchInput {
+        width: 100%;
+        padding: 12px 25px;
+        border: 2px solid #eee;
+        border-radius: 30px;
+        font-size: 1rem;
+        outline: none;
+        transition: 0.3s;
+      }
+      #searchInput:focus {
+        border-color: #ffca28;
+        box-shadow: 0 0 8px rgba(255, 202, 40, 0.2);
+      }
+
+      .analysis-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      @media screen and (min-width: 640px) {
+        .analysis-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media screen and (min-width: 1024px) {
+        .analysis-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .nutrition-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        border: 1px solid #eee;
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s;
+      }
+      .nutrition-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      /* --- 6. 圖片上沿留距與不切圖修正 --- */
+      .card-img {
+        width: 100%;
+        height: 220px;
+        background-color: #fff;
+        padding: 20px 20px 5px 20px; /* 上方預留更多空間，營造呼吸感 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .card-img img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain; /* 顯示圖片完整內容 */
+        border-radius: 6px; /* 輕微圓角增加質感 */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .card-body {
+        padding: 20px;
+        flex-grow: 1;
+      }
+      .card-body h3 {
+        font-size: 1.3rem;
+        color: #222;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        padding-bottom: 8px;
+      }
+
+      .nutrition-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        background: #fafafa;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+      .nutrition-item {
+        font-size: 0.85rem;
+        color: #666;
+      }
+      .nutrition-item span {
+        font-weight: bold;
+        color: #333;
+      }
+
+      .product-desc {
+        font-size: 0.9rem;
+        color: #777;
+        line-height: 1.5;
+        border-top: 1px dashed #ddd;
+        padding-top: 12px;
+      }
+      .card-tag {
+        display: inline-block;
+        padding: 2px 8px;
+        background: #fff9c4;
+        color: #f57f17;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      /* --- 7. 分頁修正 (修正按鈕擁擠問題) --- */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 12px; /* 增加按鈕之間的距離 */
+        margin-top: 40px;
+        margin-bottom: 40px;
+        padding: 10px; /* 確保容器有空間 */
+      }
+
+      .page-btn {
+        min-width: 40px; /* 設定最小寬度，讓數字居中 */
+        height: 40px; /* 設定高度，形成正方形或圓形 */
+        padding: 0 10px;
+        border: 1px solid #ddd;
+        background-color: #fff;
+        color: #333;
+        cursor: pointer;
+        border-radius: 6px; /* 圓角讓視覺更柔和 */
+        font-weight: bold;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: flex; /* 讓數字在按鈕內完美置中 */
+        justify-content: center;
+        align-items: center;
+        outline: none;
+      }
+
+      /* 電腦版滑鼠移入效果 */
+      @media screen and (min-width: 768px) {
+        .page-btn:hover:not(.active) {
+          background-color: #f8f9fa;
+          border-color: #ffca28;
+          color: #ffca28;
+          transform: translateY(-2px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      /* 當前選中頁面的樣式 */
+      .page-btn.active {
+        background-color: #333;
+        color: #ffca28; /* 選中時數字變黃色 */
+        border-color: #333;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* --- 回到頂部按鈕修復版 --- */
+      .back-to-top {
+        position: fixed; /* 確保按鈕固定在螢幕上 */
+        bottom: 30px; /* 距離底部距離 */
+        right: 25px; /* 距離右側距離 */
+        width: 50px;
+        height: 50px;
+        background-color: #ffca28; /* 虹美黃 */
+        color: #333;
+        border: none;
+        border-radius: 50%; /* 圓形 */
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        z-index: 9999; /* 提高層級，確保在最上層 */
+
+        /* 初始隱藏邏輯 */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      /* 當捲動後顯示按鈕 */
+      .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* 滑鼠移入發光效果 */
+      .back-to-top:hover {
+        transform: scale(1.1) translateY(-5px);
+        background-color: #ffd54f;
+        box-shadow: 0 0 20px rgba(255, 202, 40, 0.8);
+      }
+
+/* --- 8. Footer 樣式修正 (移除地圖後) --- */
+.footer { background-color: #222; color: #ccc; padding: 50px 0 20px; margin-top: 50px; }
+.footer-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 30px; }
+
+/* 手機版：資訊區塊佔滿全寬 */
+.footer-info, .footer-contact { flex: 1 0 100%; }
+
+/* 電腦版：兩個區塊左右平分 */
+@media screen and (min-width: 768px) {
+  .footer-info, .footer-contact { flex: 1; }
+}
+
+.footer-logo { color: #ffca28; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; }
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+  font-size: 0.8rem;
+}
+    </style>
+  </head>
+  <body>
+    <input type="checkbox" id="menu_control" />
+
+    <header class="header">
+      <h1 class="logo">
+        <a href="index.html"
+          ><img src="./image/虹美LOGO長.png" alt="虹美LOGO"
+        /></a>
+      </h1>
+      <label for="menu_control" class="hamburger">
+        <span></span><span></span><span></span>
+      </label>
+      <nav id="mainNav">
+        <a href="index.html">虹美廚坊</a>
+        <a href="news.html">最新菜單消息</a>
+        <a href="article.html">營養文章</a>
+        <a href="analysis.html" class="active">營養成份分析</a>
+        <a href="about.html">關於虹美</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="section-header">
+        <h1 class="page-title">營養成份分析</h1>
+        <p>虹美廚坊專業營養師把關，提供您最透明的餐點數據。</p>
+      </div>
+
+      <div class="filter-wrapper" id="filterWrapper"></div>
+      <div class="search-container">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="搜尋餐點 (如：南瓜)..." />
+      </div>
+      <div class="analysis-grid" id="analysisGrid"></div>
+      <div class="pagination" id="pagination"></div>
+    </main>
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-info">
+          <div class="footer-logo">虹美餐飲</div>
+          <p>提供最誠摯的手作美味，給您最安心的餐飲體驗。</p>
+        </div>
+
+        <div class="footer-contact">
+          <h4>聯絡我們</h4>
+          <p style="margin-top: 10px; font-size: 0.9rem">
+            <strong>電話：</strong>(08) 738-5101<br />
+            <strong>地址：</strong>屏東縣屏東市豐榮街32號
+          </p>
+        </div>
+
+        
+      </div>
+      <div class="footer-bottom">© 2026 虹美餐飲 版權所有</div>
+    </footer>
+    <button id="backToTop" class="back-to-top">↑</button>
+
+    <script>
+      let nutritionData = [];
+      let filteredData = [];
+      let currentType = "all";
+      const itemsPerPage = 6;
+      let currentPage = 1;
+
+      const analysisGrid = document.getElementById("analysisGrid");
+      const filterWrapper = document.getElementById("filterWrapper");
+      const searchInput = document.getElementById("searchInput");
+      const btnTop = document.getElementById("backToTop");
+
+      // 1. 載入 JSON 資料
+      async function loadData() {
+        try {
+          const response = await fetch("./data.json");
+          nutritionData = await response.json();
+
+          const types = [
+            "all",
+            ...new Set(nutritionData.map((item) => item.type)),
+          ];
+          filterWrapper.innerHTML = types
+            .map(
+              (type) =>
+                `<button class="filter-btn ${type === "all" ? "active" : ""}" data-type="${type}">${type === "all" ? "全部顯示" : type + "類"}</button>`,
+            )
+            .join("");
+
+          bindEvents();
+          applyFilters();
+        } catch (e) {
+          analysisGrid.innerHTML =
+            "<p style='text-align:center;'>資料讀取中，請確認 data.json 路徑是否正確...</p>";
+        }
+      }
+
+      // 2. 綁定事件
+      function bindEvents() {
+        // 分類按鈕
+        document.querySelectorAll(".filter-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentType = btn.getAttribute("data-type");
+            applyFilters();
+            document.getElementById("menu_control").checked = false;
+          });
+        });
+        // 搜尋框
+        searchInput.addEventListener("input", applyFilters);
+        // 回到頂部
+        window.addEventListener("scroll", () => {
+          if (window.scrollY > 400) btnTop.classList.add("show");
+          else btnTop.classList.remove("show");
+        });
+        btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // 3. 篩選邏輯
+      function applyFilters() {
+        const keyword = searchInput.value.toLowerCase();
+        filteredData = nutritionData.filter((item) => {
+          const typeMatch = currentType === "all" || item.type === currentType;
+          const keyMatch =
+            item.name.toLowerCase().includes(keyword) ||
+            (item.tag && item.tag.toLowerCase().includes(keyword));
+          return typeMatch && keyMatch;
+        });
+        currentPage = 1;
+        renderCards();
+      }
+
+      // 4. 渲染卡片
+      function renderCards() {
+        analysisGrid.innerHTML = "";
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageItems = filteredData.slice(start, start + itemsPerPage);
+
+        pageItems.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "nutrition-card";
+          let detailsHTML = "";
+          for (const [key, value] of Object.entries(item.details)) {
+            detailsHTML += `<div class="nutrition-item">${key}: <span>${value}</span></div>`;
+          }
+
+          card.innerHTML = `
+            <div class="card-img"><img src="${item.img}" alt="${item.name}"></div>
+            <div class="card-body">
+              <span class="card-tag">${item.tag || ""}</span>
+              <h3>${item.name}</h3>
+              <div class="nutrition-list">${detailsHTML}</div>
+              <p class="product-desc">${item.desc}</p>
+            </div>
+          `;
+          analysisGrid.appendChild(card);
+        });
+        renderPagination();
+      }
+
+      // 5. 分頁邏輯
+      function renderPagination() {
+        const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+        const pWrapper = document.getElementById("pagination");
+        pWrapper.innerHTML = "";
+        if (totalPages <= 1) return;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.innerText = i;
+          btn.className = `page-btn ${i === currentPage ? "active" : ""}`;
+          btn.onclick = () => {
+            currentPage = i;
+            renderCards();
+            window.scrollTo({ top: 200, behavior: "smooth" });
+          };
+          pWrapper.appendChild(btn);
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", loadData);
+    </script>
+  </body>
+</html>

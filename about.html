@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>關於虹美 - 虹美廚坊</title>
+    <link rel="stylesheet" href="./css/all.min.css" />
+    <style>
+      /* --- 1. 基礎設定 --- */
+      * { margin: 0; padding: 0; list-style: none; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif; }
+      body { background-color: #fafafa; color: #333; line-height: 1.8; }
+      #menu_control { display: none; }
+
+      /* --- 2. Header & 導覽列 --- */
+      .header { background-color: #333; height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+      .logo img { height: 45px; vertical-align: middle; }
+      .hamburger span { display: block; width: 25px; height: 3px; background-color: #fff; margin: 5px 0; transition: 0.3s; border-radius: 2px; }
+      nav { width: 100%; height: calc(100vh - 65px); background-color: rgba(51, 51, 51, 0.95); position: absolute; top: 65px; left: -100%; transition: 0.5s; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
+      nav a { color: #fff; text-decoration: none; padding: 20px; border-bottom: 1px solid #555; text-align: center; }
+      #menu_control:checked ~ .header nav { left: 0; }
+
+      @media screen and (min-width: 768px) {
+        .menu_btn { display: none; }
+        nav { position: static; width: auto; height: auto; flex-direction: row; background-color: transparent; }
+        nav a { border-bottom: none; padding: 0 15px; line-height: 65px; color: #ddd; position: relative; }
+        nav a:hover, nav a.active { color: #ffca28 !important; }
+        nav a::after { content: ""; position: absolute; bottom: 15px; left: 50%; width: 0; height: 2px; background-color: #ffca28; transition: 0.3s; transform: translateX(-50%); }
+        nav a:hover::after, nav a.active::after { width: 70%; }
+      }
+
+      /* --- 3. 關於虹美專屬樣式 --- */
+      .container { max-width: 1000px; margin: 40px auto; padding: 0 15px; }
+      .page-title { font-size: 2.2rem; text-align: center; margin-bottom: 50px; color: #222; position: relative; padding-bottom: 15px; }
+      .page-title::after { content: ""; position: absolute; bottom: 0; left: 50%; width: 60px; height: 4px; background: #ffca28; transform: translateX(-50%); }
+
+      .about-section { background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px; }
+      .about-section h2 { color: #222; margin-bottom: 20px; border-left: 6px solid #ffca28; padding-left: 15px; }
+      .about-content { font-size: 1.1rem; color: #444; text-align: justify; }
+      .about-content p { margin-bottom: 20px; }
+
+      .award-grid { display: grid; grid-template-columns: 1fr; gap: 30px; margin-top: 30px; }
+      .award-card { background: #f9f9f9; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #eee; transition: 0.3s; }
+      .award-card:hover { transform: translateY(-5px); border-color: #ffca28; }
+      .award-card img { max-width: 100%; height: 350px; object-fit: contain; border-radius: 4px; margin-bottom: 15px; }
+      .award-card h3 { font-size: 1.2rem; color: #333; }
+
+      @media screen and (min-width: 768px) {
+        .award-grid { grid-template-columns: 1fr 1fr; }
+      }
+
+      /* 回到頂部按鈕樣式 */
+      #backToTop { position: fixed; bottom: 30px; right: 25px; width: 50px; height: 50px; background-color: #ffca28; border: none; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 22px; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+      #backToTop.show { opacity: 1; visibility: visible; }
+
+      .footer { background-color: #222; color: #ccc; padding: 50px 0 20px; margin-top: 80px; }
+      .footer-bottom { text-align: center; margin-top: 20px; border-top: 1px solid #333; padding-top: 20px; font-size: 0.8rem; }
+      
+      .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin: 25px 0; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+      .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+    </style>
+  </head>
+  <body>
+    <input type="checkbox" id="menu_control" />
+
+    <header class="header">
+      <h1 class="logo"><a href="index.html"><img src="./image/虹美LOGO長.png" alt="虹美LOGO" /></a></h1>
+      <label for="menu_control" class="menu_btn"><div class="hamburger"><span></span><span></span><span></span></div></label>
+      <nav id="mainNav">
+        <a href="index.html">虹美廚坊</a>
+        <a href="news.html">最新菜單消息</a>
+        <a href="article.html">營養文章</a>
+        <a href="analysis.html">營養成份分析</a>
+        <a href="about.html">關於虹美</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h2 class="page-title">關於虹美</h2>
+
+      <section class="about-section">
+        <h2>創立理念</h2>
+        <div class="about-content">
+          <p>一切從一個問題開始：吃錯了，身體會告訴你</p>
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/pEnju7WkwDY" title="虹美廚坊創立理念" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <p>「我看過太多病人，吃出問題，也吃不回健康。 我希望，有一間店，讓人能在外食中也吃對，而不是等病了才來後悔。」<br>—— 創辦人 李洮俊醫師</p>
+          <p>李醫師在醫學領域已有 40 多年的經驗，專精於新陳代謝與腎臟病照護。他心想：❝如果我能開一家餐廳，讓大家在還沒生病前，就能吃得對呢？❞ 於是，這家店誕生了。</p>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <h2>虹美的堅持</h2>
+        <div class="about-content">
+          <p>提供健康美味營養均衡之餐食，聘請五星級廚師掌廚，全程秉持低油、低糖、少鹽之烹調方法，在享受美食的同時，又能兼顧健康。</p>
+        </div>
+      </section>
+
+      <section class="about-section">
+        <h2>專業認證：衛生優良</h2>
+        <div class="about-content">
+          <p>虹美廚坊連續多年榮獲屏東縣政府衛生局評核之「餐飲衛生分級評核：優良」肯定。</p>
+        </div>
+        <div class="award-grid">
+          <div class="award-card">
+            <img src="./image/100年獎牌.png" alt="100年度衛生優良獎牌">
+            <h3>100年度餐飲衛生分級評核【優】</h3>
+          </div>
+          <div class="award-card">
+            <img src="./image/103年獎牌.png" alt="103年度衛生優良獎牌">
+            <h3>103年度餐飲衛生分級評核【優】</h3>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-bottom">© 2026 虹美餐飲 版權所有</div>
+    </footer>
+
+    <button id="backToTop">↑</button>
+
+    <script>
+      // 1. 穩健型導覽列 Active 判斷 (解決放上網後無底線問題)
+      window.addEventListener('DOMContentLoaded', () => {
+        const currentPath = decodeURI(window.location.pathname).toLowerCase();
+        const navLinks = document.querySelectorAll("#mainNav a");
+
+        navLinks.forEach((link) => {
+          const linkHref = link.getAttribute("href").toLowerCase().replace('./', '');
+
+          // 處理首頁
+          if (linkHref === "index.html") {
+            if (currentPath.endsWith("/") || currentPath.includes("index.html") || currentPath === "") {
+              link.classList.add("active");
+            }
+          } 
+          // 處理其他分頁：模糊比對核心關鍵字 (如 about)
+          else if (linkHref) {
+            const keyword = linkHref.split('.')[0]; 
+            if (currentPath.includes(keyword)) {
+              link.classList.add("active");
+            }
+          }
+        });
+
+        // 漢堡選單自動收合
+        const menuControl = document.getElementById("menu_control");
+        navLinks.forEach((link) => {
+          link.addEventListener('click', () => {
+            if (menuControl) menuControl.checked = false;
+          });
+        });
+      });
+
+      // 2. 回到頂部按鈕邏輯
+      const btnTop = document.getElementById("backToTop");
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          btnTop.classList.add("show");
+        } else {
+          btnTop.classList.remove("show");
+        }
+      });
+      btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+    </script>
+  </body>
+</html>
