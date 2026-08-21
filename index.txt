@@ -771,11 +771,11 @@
         }
       }
       .popup-content img {
-        width: 100%;
-        max-width: 100%; /* 確保圖片寬度不會超過容器 */
-        height: auto;
-        display: block;
-      }
+  width: 100%;
+  max-width: 100%; /* 確保圖片寬度不會超過容器 */
+  height: auto;
+  display: block;
+}
     </style>
   </head>
   <body>
@@ -783,7 +783,9 @@
     <div id="popup_ad" class="popup-overlay">
       <div class="popup-content">
         <button class="close-ad" id="closeAd">&times;</button>
-        <a href="#" target="_blank">
+        <a
+          href="#"
+          target="_blank">
           <img src="./image/ad-banner.jpg" alt="快顯活動廣告" />
         </a>
       </div>
@@ -806,7 +808,6 @@
         <a href="article.html">營養文章</a>
         <a href="analysis.html">營養成份分析</a>
         <a href="about.html">關於虹美</a>
-        <a href="board.html">意見留言板</a>
       </nav>
     </header>
 
@@ -1732,6 +1733,7 @@
 
     <button id="backToTop">↑</button>
 
+    
     <div
       id="cart-panel"
       style="
@@ -1813,24 +1815,24 @@
           使用 LINE 送出訂單
         </button>
         <button
-          onclick="sendOrderToGoogleForm()"
-          style="
-            width: 100%;
-            background-color: #4285f4;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-          ">
-          <i class="fab fa-google"></i> Google 表單下單 (備援)
-        </button>
+  onclick="sendOrderToGoogleForm()"
+  style="
+    width: 100%; 
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  ">
+  <i class="fab fa-google"></i> Google 表單下單 (備援)
+</button>
         <button
           onclick="clearCart()"
           style="
@@ -1849,46 +1851,43 @@
     </div>
 
     <script>
-      // 1. 自動讓導覽列顯示當前分頁 (底線效果)
-      window.addEventListener("DOMContentLoaded", () => {
-        const currentUrl = window.location.pathname.split("/").pop();
-        const navLinks = document.querySelectorAll("nav a");
-        navLinks.forEach((link) => {
-          const linkHref = link.getAttribute("href");
-          if (
-            currentUrl === linkHref ||
-            (currentUrl === "" && linkHref === "index.html")
-          ) {
-            link.classList.add("active");
-          }
-        });
-      });
-
-      // 2. 購物車資料處理
-      let cart = [];
-
-      function addToCart(name, price) {
-        cart.push({ name, price });
-        updateCartUI();
-        document.getElementById("cart-panel").style.display = "block";
+  // 1. 自動讓導覽列顯示當前分頁 (底線效果)
+  window.addEventListener("DOMContentLoaded", () => {
+    const currentUrl = window.location.pathname.split("/").pop();
+    const navLinks = document.querySelectorAll("nav a");
+    navLinks.forEach((link) => {
+      const linkHref = link.getAttribute("href");
+      if (currentUrl === linkHref || (currentUrl === "" && linkHref === "index.html")) {
+        link.classList.add("active");
       }
+    });
+  });
 
-      function updateCartUI() {
-        const listElement = document.getElementById("cart-list");
-        const totalElement = document.getElementById("cart-total");
-        listElement.innerHTML = "";
-        let total = 0;
+  // 2. 購物車資料處理
+  let cart = [];
 
-        // 統計各品項數量
-        const summary = cart.reduce((acc, item) => {
-          if (!acc[item.name]) acc[item.name] = { count: 0, price: item.price };
-          acc[item.name].count += 1;
-          return acc;
-        }, {});
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCartUI();
+    document.getElementById("cart-panel").style.display = "block";
+  }
 
-        for (const [name, info] of Object.entries(summary)) {
-          total += info.price * info.count;
-          listElement.innerHTML += `
+  function updateCartUI() {
+    const listElement = document.getElementById("cart-list");
+    const totalElement = document.getElementById("cart-total");
+    listElement.innerHTML = "";
+    let total = 0;
+
+    // 統計各品項數量
+    const summary = cart.reduce((acc, item) => {
+      if (!acc[item.name]) acc[item.name] = { count: 0, price: item.price };
+      acc[item.name].count += 1;
+      return acc;
+    }, {});
+
+    for (const [name, info] of Object.entries(summary)) {
+      total += info.price * info.count;
+      listElement.innerHTML += `
         <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <div style="display: flex; flex-direction: column;">
             <span style="font-weight: 500;">${name}</span>
@@ -1900,178 +1899,171 @@
             <button onclick="changeQty('${name}', 1)" style="width:24px; height:24px; border:1px solid #ddd; border-radius:50%; cursor:pointer;">+</button>
           </div>
         </li>`;
-        }
-        totalElement.innerText = total;
+    }
+    totalElement.innerText = total;
+  }
+
+  function changeQty(name, delta) {
+    if (delta === 1) {
+      const item = cart.find(i => i.name === name);
+      cart.push({ name: item.name, price: item.price });
+    } else {
+      const index = cart.findLastIndex(i => i.name === name);
+      if (index !== -1) cart.splice(index, 1);
+    }
+    if (cart.length === 0) document.getElementById("cart-panel").style.display = "none";
+    updateCartUI();
+  }
+
+  function clearCart() {
+    if (confirm("確定要清空訂購清單嗎？")) {
+      cart = [];
+      updateCartUI();
+      document.getElementById("cart-panel").style.display = "none";
+    }
+  }
+
+  // 3. 【核心修復】縮放功能邏輯
+  function toggleCartMin() {
+    const wrapper = document.getElementById("cart-content-wrapper");
+    const icon = document.getElementById("min-icon");
+    const panel = document.getElementById("cart-panel");
+
+    // 修改判斷方式：如果 display 不是 none (代表現在正開著)，就執行縮小
+    if (wrapper.style.display !== "none") {
+      wrapper.style.display = "none"; // 執行縮小
+      icon.innerText = "+";
+      panel.style.width = "150px";
+      panel.style.opacity = "1";
+    } else {
+      wrapper.style.display = "block"; // 執行展開
+      icon.innerText = "−";
+      panel.style.width = "260px";
+    }
+  }
+
+  // 4. 【核心修復】LINE 送出功能 (含實名制對話框)
+  function sendToLine() {
+    if (cart.length === 0) return alert("請先選擇餐點喔！");
+    
+    // 方案 B 的確認視窗
+    const isConfirmed = confirm("【實名制訂購須知】\n\n1. 為求實名制，請務必先加入 LINE 官方好友。\n2. 送出後請傳訊息告知預計取餐時間。\n\n確定要送出訂單嗎？");
+    if (!isConfirmed) return;
+
+    const userName = prompt("請輸入訂購人姓名：");
+    if (!userName || userName.trim().length < 2) return alert("請輸入正確姓名！");
+    const userPhone = prompt("請輸入手機號碼：");
+    if (!/^09\d{8}$/.test(userPhone)) return alert("手機格式錯誤！");
+
+    const userNote = document.getElementById("order-note").value;
+    const summary = cart.reduce((acc, item) => { 
+        acc[item.name] = (acc[item.name] || 0) + 1; 
+        return acc; 
+    }, {});
+
+    let message = `【虹美官網訂單】\n訂購人：${userName}\n電話：${userPhone}\n`;
+    if (userNote) message += `備註：${userNote}\n`;
+    message += `------------------\n訂購明細：\n`;
+    for (const [name, count] of Object.entries(summary)) { 
+        message += `• ${name} x ${count}\n`; 
+    }
+    message += `💰 總計：$${document.getElementById("cart-total").innerText} 元`;
+    
+    window.location.href = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+  }
+
+  // 5. 【核心修復】Google 表單送出功能 (含實名制對話框)
+  function sendOrderToGoogleForm() {
+    if (cart.length === 0) return alert("購物車是空的！");
+    
+    // 方案 B 的確認視窗
+    const isConfirmed = confirm("【登入提醒】\n\n為落實實名制，使用 Google 表單「必須登入 Google 帳號」。\n\n確定要前往表單頁面嗎？");
+    if (!isConfirmed) return;
+
+    const userNote = document.getElementById("order-note").value;
+    const summary = cart.reduce((acc, item) => { 
+        acc[item.name] = (acc[item.name] || 0) + 1; 
+        return acc; 
+    }, {});
+
+    let details = "【虹美廚坊 - 備援訂單】\n\n";
+    for (const [name, count] of Object.entries(summary)) { 
+        details += `● ${name} x ${count}\n`; 
+    }
+    details += `\n💰 總計金額：$${document.getElementById("cart-total").innerText} 元`;
+
+    const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSc4Q5nbGPZtgEapQRIn9hdVRDFXbTbkT6qp0_8KyjR9ARr7Lg/viewform?usp=pp_url";
+    // 同時傳遞 明細(entry.1520106088) 與 備註(entry.259421630)
+    const finalUrl = `${baseUrl}&entry.1520106088=${encodeURIComponent(details)}&entry.259421630=${encodeURIComponent(userNote)}`;
+    
+    window.open(finalUrl, "_blank");
+  }
+
+  // 廣告與其他 UI 功能保持不變...
+  // === 6. 快顯廣告自動彈出邏輯 (含 localStorage 記憶功能) ===
+  window.addEventListener("load", () => {
+    const popupAd = document.getElementById("popup_ad");
+    const closeAd = document.getElementById("closeAd");
+
+    if (!popupAd || !closeAd) return; // 安全檢查
+
+    // 獲取今天的日期字串 (例如: "2026-04-04")
+    const today = new Date().toISOString().split("T")[0];
+
+    // 檢查 localStorage 是否存有今天的關閉紀錄
+    const adClosedDate = localStorage.getItem("hongmei_ad_closed_date");
+
+    // 如果今天的日期還沒被記錄過，才執行彈出邏輯
+    if (adClosedDate !== today) {
+      setTimeout(() => {
+        popupAd.style.display = "flex";
+      }, 1000); // 網頁載入 1 秒後顯示
+    }
+
+    // 點擊關閉按鈕
+    closeAd.onclick = () => {
+      popupAd.style.display = "none";
+      // 關鍵：將今天的日期存入 localStorage，標記為今日已關閉
+      localStorage.setItem("hongmei_ad_closed_date", today);
+    };
+
+    // 點擊背景區域也能關閉
+    popupAd.onclick = (e) => {
+      if (e.target === popupAd) {
+        popupAd.style.display = "none";
+        localStorage.setItem("hongmei_ad_closed_date", today);
       }
+    };
+  });
+  // === 7. 回到頂部按鈕功能 ===
+  const btnTop = document.getElementById("backToTop");
+  window.addEventListener("scroll", () => {
+    // 當網頁往下捲動超過 400 像素時幫按鈕加上 .show 類別
+    if (window.scrollY > 400) {
+      btnTop.classList.add("show");
+    } else {
+      btnTop.classList.remove("show");
+    }
+  });
+  
+  // 點擊按鈕平滑回到最上方
+  btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  // === 8. 查看更多影片功能修復 ===
+document.addEventListener("DOMContentLoaded", () => {
+  const loadMoreBtn = document.getElementById("loadMoreBtn");
+  const hiddenVideos = document.querySelectorAll(".video-card.hidden");
 
-      function changeQty(name, delta) {
-        if (delta === 1) {
-          const item = cart.find((i) => i.name === name);
-          cart.push({ name: item.name, price: item.price });
-        } else {
-          const index = cart.findLastIndex((i) => i.name === name);
-          if (index !== -1) cart.splice(index, 1);
-        }
-        if (cart.length === 0)
-          document.getElementById("cart-panel").style.display = "none";
-        updateCartUI();
-      }
-
-      function clearCart() {
-        if (confirm("確定要清空訂購清單嗎？")) {
-          cart = [];
-          updateCartUI();
-          document.getElementById("cart-panel").style.display = "none";
-        }
-      }
-
-      // 3. 【核心修復】縮放功能邏輯
-      function toggleCartMin() {
-        const wrapper = document.getElementById("cart-content-wrapper");
-        const icon = document.getElementById("min-icon");
-        const panel = document.getElementById("cart-panel");
-
-        // 修改判斷方式：如果 display 不是 none (代表現在正開著)，就執行縮小
-        if (wrapper.style.display !== "none") {
-          wrapper.style.display = "none"; // 執行縮小
-          icon.innerText = "+";
-          panel.style.width = "150px";
-          panel.style.opacity = "1";
-        } else {
-          wrapper.style.display = "block"; // 執行展開
-          icon.innerText = "−";
-          panel.style.width = "260px";
-        }
-      }
-
-      // 4. 【核心修復】LINE 送出功能 (含實名制對話框)
-      function sendToLine() {
-        if (cart.length === 0) return alert("請先選擇餐點喔！");
-
-        // 方案 B 的確認視窗
-        const isConfirmed = confirm(
-          "【實名制訂購須知】\n\n1. 為求實名制，請務必先加入 LINE 官方好友。\n2. 送出後請傳訊息告知預計取餐時間。\n\n確定要送出訂單嗎？",
-        );
-        if (!isConfirmed) return;
-
-        const userName = prompt("請輸入訂購人姓名：");
-        if (!userName || userName.trim().length < 2)
-          return alert("請輸入正確姓名！");
-        const userPhone = prompt("請輸入手機號碼：");
-        if (!/^09\d{8}$/.test(userPhone)) return alert("手機格式錯誤！");
-
-        const userNote = document.getElementById("order-note").value;
-        const summary = cart.reduce((acc, item) => {
-          acc[item.name] = (acc[item.name] || 0) + 1;
-          return acc;
-        }, {});
-
-        let message = `【虹美官網訂單】\n訂購人：${userName}\n電話：${userPhone}\n`;
-        if (userNote) message += `備註：${userNote}\n`;
-        message += `------------------\n訂購明細：\n`;
-        for (const [name, count] of Object.entries(summary)) {
-          message += `• ${name} x ${count}\n`;
-        }
-        message += `💰 總計：$${document.getElementById("cart-total").innerText} 元`;
-
-        window.location.href = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
-      }
-
-      // 5. 【核心修復】Google 表單送出功能 (含實名制對話框)
-      function sendOrderToGoogleForm() {
-        if (cart.length === 0) return alert("購物車是空的！");
-
-        // 方案 B 的確認視窗
-        const isConfirmed = confirm(
-          "【登入提醒】\n\n為落實實名制，使用 Google 表單「必須登入 Google 帳號」。\n\n確定要前往表單頁面嗎？",
-        );
-        if (!isConfirmed) return;
-
-        const userNote = document.getElementById("order-note").value;
-        const summary = cart.reduce((acc, item) => {
-          acc[item.name] = (acc[item.name] || 0) + 1;
-          return acc;
-        }, {});
-
-        let details = "【虹美廚坊 - 備援訂單】\n\n";
-        for (const [name, count] of Object.entries(summary)) {
-          details += `● ${name} x ${count}\n`;
-        }
-        details += `\n💰 總計金額：$${document.getElementById("cart-total").innerText} 元`;
-
-        const baseUrl =
-          "https://docs.google.com/forms/d/e/1FAIpQLSc4Q5nbGPZtgEapQRIn9hdVRDFXbTbkT6qp0_8KyjR9ARr7Lg/viewform?usp=pp_url";
-        // 同時傳遞 明細(entry.1520106088) 與 備註(entry.259421630)
-        const finalUrl = `${baseUrl}&entry.1520106088=${encodeURIComponent(details)}&entry.259421630=${encodeURIComponent(userNote)}`;
-
-        window.open(finalUrl, "_blank");
-      }
-
-      // 廣告與其他 UI 功能保持不變...
-      // === 6. 快顯廣告自動彈出邏輯 (含 localStorage 記憶功能) ===
-      window.addEventListener("load", () => {
-        const popupAd = document.getElementById("popup_ad");
-        const closeAd = document.getElementById("closeAd");
-
-        if (!popupAd || !closeAd) return; // 安全檢查
-
-        // 獲取今天的日期字串 (例如: "2026-04-04")
-        const today = new Date().toISOString().split("T")[0];
-
-        // 檢查 localStorage 是否存有今天的關閉紀錄
-        const adClosedDate = localStorage.getItem("hongmei_ad_closed_date");
-
-        // 如果今天的日期還沒被記錄過，才執行彈出邏輯
-        if (adClosedDate !== today) {
-          setTimeout(() => {
-            popupAd.style.display = "flex";
-          }, 1000); // 網頁載入 1 秒後顯示
-        }
-
-        // 點擊關閉按鈕
-        closeAd.onclick = () => {
-          popupAd.style.display = "none";
-          // 關鍵：將今天的日期存入 localStorage，標記為今日已關閉
-          localStorage.setItem("hongmei_ad_closed_date", today);
-        };
-
-        // 點擊背景區域也能關閉
-        popupAd.onclick = (e) => {
-          if (e.target === popupAd) {
-            popupAd.style.display = "none";
-            localStorage.setItem("hongmei_ad_closed_date", today);
-          }
-        };
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener("click", () => {
+      hiddenVideos.forEach((video) => {
+        // 移除 hidden 類別讓影片顯示
+        video.classList.remove("hidden");
       });
-      // === 7. 回到頂部按鈕功能 ===
-      const btnTop = document.getElementById("backToTop");
-      window.addEventListener("scroll", () => {
-        // 當網頁往下捲動超過 400 像素時幫按鈕加上 .show 類別
-        if (window.scrollY > 400) {
-          btnTop.classList.add("show");
-        } else {
-          btnTop.classList.remove("show");
-        }
-      });
-
-      // 點擊按鈕平滑回到最上方
-      btnTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
-      // === 8. 查看更多影片功能修復 ===
-      document.addEventListener("DOMContentLoaded", () => {
-        const loadMoreBtn = document.getElementById("loadMoreBtn");
-        const hiddenVideos = document.querySelectorAll(".video-card.hidden");
-
-        if (loadMoreBtn) {
-          loadMoreBtn.addEventListener("click", () => {
-            hiddenVideos.forEach((video) => {
-              // 移除 hidden 類別讓影片顯示
-              video.classList.remove("hidden");
-            });
-            // 點擊後隱藏「查看更多」按鈕，因為已經沒有更多可以顯示了
-            loadMoreBtn.style.display = "none";
-          });
-        }
-      });
-    </script>
+      // 點擊後隱藏「查看更多」按鈕，因為已經沒有更多可以顯示了
+      loadMoreBtn.style.display = "none";
+    });
+  }
+});
+</script>
   </body>
 </html>
