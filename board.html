@@ -9,79 +9,359 @@
       /* ========================================== */
       /* 1. 沿用虹美原有基礎與導覽列設定 */
       /* ========================================== */
-      * { margin: 0; padding: 0; list-style: none; box-sizing: border-box; font-family: "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif; }
-      body { background-color: #fafafa; color: #333; line-height: 1.6; }
-      #menu_control { display: none; }
-      .header { background-color: #333; height: 65px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
-      .logo img { height: 45px; vertical-align: middle; }
-      .menu_btn { background-color: transparent; width: 30px; }
-      .hamburger span { display: block; width: 25px; height: 3px; background-color: #fff; margin: 5px 0; transition: 0.3s; border-radius: 2px; }
-      #menu_control:checked ~ .header .hamburger span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-      #menu_control:checked ~ .header .hamburger span:nth-child(2) { opacity: 0; }
-      #menu_control:checked ~ .header .hamburger span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-      nav { width: 100%; height: calc(100vh - 65px); background-color: rgba(51, 51, 51, 0.95); position: absolute; top: 65px; left: -100%; transition: 0.5s; display: flex; flex-direction: column; backdrop-filter: blur(5px); }
-      nav a { color: #fff; text-decoration: none; padding: 20px; border-bottom: 1px solid #555; text-align: center; font-size: 1.1rem; }
-      #menu_control:checked ~ .header nav { left: 0; }
-      .container { max-width: 1200px; margin: 20px auto 80px; padding: 0 15px; }
-      .section-title { font-size: 1.6rem; color: #222; margin: 50px 0 15px; padding-left: 15px; border-left: 6px solid #ffca28; display: flex; align-items: center; }
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+        font-family:
+          "PingFang TC", "Heiti TC", "Microsoft JhengHei", sans-serif;
+      }
+      body {
+        background-color: #fafafa;
+        color: #333;
+        line-height: 1.6;
+      }
+      #menu_control {
+        display: none;
+      }
+      .header {
+        background-color: #333;
+        height: 65px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      .logo img {
+        height: 45px;
+        vertical-align: middle;
+      }
+      .menu_btn {
+        background-color: transparent;
+        width: 30px;
+      }
+      .hamburger span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        margin: 5px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+      #menu_control:checked ~ .header .hamburger span:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+      #menu_control:checked ~ .header .hamburger span:nth-child(2) {
+        opacity: 0;
+      }
+      #menu_control:checked ~ .header .hamburger span:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+      nav {
+        width: 100%;
+        height: calc(100vh - 65px);
+        background-color: rgba(51, 51, 51, 0.95);
+        position: absolute;
+        top: 65px;
+        left: -100%;
+        transition: 0.5s;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(5px);
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 20px;
+        border-bottom: 1px solid #555;
+        text-align: center;
+        font-size: 1.1rem;
+      }
+      #menu_control:checked ~ .header nav {
+        left: 0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 20px auto 80px;
+        padding: 0 15px;
+      }
+      .section-title {
+        font-size: 1.6rem;
+        color: #222;
+        margin: 50px 0 15px;
+        padding-left: 15px;
+        border-left: 6px solid #ffca28;
+        display: flex;
+        align-items: center;
+      }
 
       @media screen and (min-width: 768px) {
-        .menu_btn { display: none; }
-        nav { position: static; width: auto; height: auto; flex-direction: row; background-color: transparent; }
-        nav a { border-bottom: none; padding: 0 15px; line-height: 65px; color: #ddd; position: relative; transition: color 0.3s; }
-        nav a.active, nav a:hover { color: #ffca28 !important; }
-        nav a::after { content: ""; position: absolute; bottom: 15px; left: 50%; width: 0; height: 2px; background-color: #ffca28; transition: all 0.3s; transform: translateX(-50%); }
-        nav a:hover::after, nav a.active::after { width: 70%; }
+        .menu_btn {
+          display: none;
+        }
+        nav {
+          position: static;
+          width: auto;
+          height: auto;
+          flex-direction: row;
+          background-color: transparent;
+        }
+        nav a {
+          border-bottom: none;
+          padding: 0 15px;
+          line-height: 65px;
+          color: #ddd;
+          position: relative;
+          transition: color 0.3s;
+        }
+        nav a.active,
+        nav a:hover {
+          color: #ffca28 !important;
+        }
+        nav a::after {
+          content: "";
+          position: absolute;
+          bottom: 15px;
+          left: 50%;
+          width: 0;
+          height: 2px;
+          background-color: #ffca28;
+          transition: all 0.3s;
+          transform: translateX(-50%);
+        }
+        nav a:hover::after,
+        nav a.active::after {
+          width: 70%;
+        }
       }
 
       /* ========================================== */
       /* 2. 留言板專屬樣式 */
       /* ========================================== */
-      .board-wrapper { background-color: white; width: 100%; max-width: 800px; margin: 0 auto; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); padding: 30px; border: 1px solid #eee; }
-      .auth-section { text-align: center; margin: 20px 0; padding: 20px; background-color: #fff9e6; border-radius: 8px; border: 1px solid #ffca28; }
-      .google-btn { display: inline-block; background-color: #4285F4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; }
-      .google-btn:hover { background-color: #357ae8; }
-      .user-info { color: #555; margin-bottom: 15px; font-size: 1.1rem; }
-      
+      .board-wrapper {
+        background-color: white;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        padding: 30px;
+        border: 1px solid #eee;
+      }
+      .auth-section {
+        text-align: center;
+        margin: 20px 0;
+        padding: 20px;
+        background-color: #fff9e6;
+        border-radius: 8px;
+        border: 1px solid #ffca28;
+      }
+      .google-btn {
+        display: inline-block;
+        background-color: #4285f4;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: 0.3s;
+        cursor: pointer;
+        border: none;
+        font-size: 1rem;
+      }
+      .google-btn:hover {
+        background-color: #357ae8;
+      }
+      .user-info {
+        color: #555;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
       /* 修改登出按鈕樣式，讓它看起來像文字連結 */
-      .logout-btn { color: #d9534f; background: none; border: none; font-size: 0.9em; margin-left: 10px; font-weight: bold; cursor: pointer; text-decoration: underline; }
-      
-      .post-form { display: flex; flex-direction: column; gap: 15px; }
-      textarea { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 8px; resize: vertical; min-height: 100px; font-family: inherit; font-size: 1rem; box-sizing: border-box; }
-      textarea:focus { outline: none; border-color: #ffca28; box-shadow: 0 0 5px rgba(255,202,40,0.5); }
-      .submit-btn { background-color: #ffca28; color: #333; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; align-self: flex-end; transition: 0.3s; }
-      .submit-btn:hover { background-color: #333; color: #fff; }
-      .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
-      
-      .messages-list { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-      .message-card { background-color: #fff; border-left: 5px solid #ffca28; padding: 20px; border-radius: 8px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-      .message-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9em; color: #777; border-bottom: 1px dashed #eee; padding-bottom: 8px; }
-      .message-author { font-weight: bold; color: #333; }
-      .message-content { line-height: 1.6; color: #444; word-wrap: break-word; }
-      .empty-message { text-align: center; color: #999; padding: 30px; background: #fafafa; border-radius: 8px; }
+      .logout-btn {
+        color: #d9534f;
+        background: none;
+        border: none;
+        font-size: 0.9em;
+        margin-left: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .post-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+      textarea:focus {
+        outline: none;
+        border-color: #ffca28;
+        box-shadow: 0 0 5px rgba(255, 202, 40, 0.5);
+      }
+      .submit-btn {
+        background-color: #ffca28;
+        color: #333;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: bold;
+        align-self: flex-end;
+        transition: 0.3s;
+      }
+      .submit-btn:hover {
+        background-color: #333;
+        color: #fff;
+      }
+      .submit-btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .messages-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .message-card {
+        background-color: #fff;
+        border-left: 5px solid #ffca28;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+      }
+      .message-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        color: #777;
+        border-bottom: 1px dashed #eee;
+        padding-bottom: 8px;
+      }
+      .message-author {
+        font-weight: bold;
+        color: #333;
+      }
+      .message-content {
+        line-height: 1.6;
+        color: #444;
+        word-wrap: break-word;
+      }
+      .empty-message {
+        text-align: center;
+        color: #999;
+        padding: 30px;
+        background: #fafafa;
+        border-radius: 8px;
+      }
 
       /* ========================================== */
       /* 3. 沿用虹美頁尾樣式 */
       /* ========================================== */
-      .footer { background-color: #222; color: #ccc; padding: 50px 0 20px; margin-top: 50px; }
-      .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-wrap: wrap; gap: 30px; }
-      .footer-info, .footer-contact, .footer-map { flex: 1 0 100%; }
-      .footer-logo { color: #ffca28; font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; }
-      .contact-section { border-left: 3px solid #ffca28; padding-left: 12px; margin-bottom: 20px; }
-      .contact-label { color: #ffca28; font-weight: bold; font-size: 1rem; margin-bottom: 8px; }
-      .footer-contact li { margin-bottom: 5px; font-size: 0.9rem; color: #eee; }
-      .footer-bottom { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #333; font-size: 0.8rem; }
-      @media screen and (min-width: 768px) { .footer-info, .footer-contact, .footer-map { flex: 1; } .footer-map { flex: 1.5; } }
+      .footer {
+        background-color: #222;
+        color: #ccc;
+        padding: 50px 0 20px;
+        margin-top: 50px;
+      }
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+      .footer-info,
+      .footer-contact,
+      .footer-map {
+        flex: 1 0 100%;
+      }
+      .footer-logo {
+        color: #ffca28;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 15px;
+      }
+      .contact-section {
+        border-left: 3px solid #ffca28;
+        padding-left: 12px;
+        margin-bottom: 20px;
+      }
+      .contact-label {
+        color: #ffca28;
+        font-weight: bold;
+        font-size: 1rem;
+        margin-bottom: 8px;
+      }
+      .footer-contact li {
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: #eee;
+      }
+      .footer-bottom {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+        font-size: 0.8rem;
+      }
+      @media screen and (min-width: 768px) {
+        .footer-info,
+        .footer-contact,
+        .footer-map {
+          flex: 1;
+        }
+        .footer-map {
+          flex: 1.5;
+        }
+      }
 
       /* ========================================== */
       /* 4. 留言板專屬 RWD (手機版調整) */
       /* ========================================== */
       @media screen and (max-width: 767px) {
-        .board-wrapper { padding: 15px; margin-bottom: 20px; }
-        .auth-section { padding: 15px; }
-        .submit-btn { width: 100%; padding: 15px; font-size: 1.05rem; }
-        .message-card { padding: 15px; }
-        .message-header { flex-direction: column; gap: 5px; }
+        .board-wrapper {
+          padding: 15px;
+          margin-bottom: 20px;
+        }
+        .auth-section {
+          padding: 15px;
+        }
+        .submit-btn {
+          width: 100%;
+          padding: 15px;
+          font-size: 1.05rem;
+        }
+        .message-card {
+          padding: 15px;
+        }
+        .message-header {
+          flex-direction: column;
+          gap: 5px;
+        }
       }
     </style>
   </head>
@@ -90,7 +370,12 @@
     <input type="checkbox" id="menu_control" />
     <header class="header">
       <h1 class="logo">
-        <a href="https://sunyanzi948c-cpu.github.io/hongmei-menu/index.html"><img src="./image/虹美LOGO長.png" alt="虹美LOGO" onerror="this.src='https://via.placeholder.com/120x45?text=Logo'"/></a>
+        <a href="https://sunyanzi948c-cpu.github.io/hongmei-menu/index.html"
+          ><img
+            src="./image/虹美LOGO長.png"
+            alt="虹美LOGO"
+            onerror="this.src = 'https://via.placeholder.com/120x45?text=Logo'"
+        /></a>
       </h1>
       <label for="menu_control" class="menu_btn">
         <div class="hamburger"><span></span><span></span><span></span></div>
@@ -108,45 +393,73 @@
     <!-- 留言板主要內容區塊 -->
     <main class="container">
       <h2 class="section-title">意見留言板</h2>
-      
+
       <div class="board-wrapper">
-        
         <!-- === JavaScript 動態控制區塊開始 === -->
-        
+
         <!-- 狀態A：已登入顯示的區塊 (預設隱藏) -->
-        <div id="auth-logged-in" class="auth-section" style="display: none;">
-            <div class="user-info">
-                歡迎回來，<strong id="user-email-display"></strong>
-                <button id="logout-btn" class="logout-btn">登出</button>
-            </div>
-            <form id="post-form" class="post-form">
-                <textarea id="message_content" placeholder="請留下您對餐點的寶貴意見或是想對我們說的話..." required></textarea>
-                <button type="submit" id="submit-btn" class="submit-btn">送出留言</button>
-            </form>
+        <div id="auth-logged-in" class="auth-section" style="display: none">
+          <div class="user-info">
+            歡迎回來，<strong id="user-email-display"></strong>
+            <button id="logout-btn" class="logout-btn">登出</button>
+          </div>
+          <form id="post-form" class="post-form">
+            <textarea
+              id="message_content"
+              placeholder="請留下您對餐點的寶貴意見或是想對我們說的話..."
+              required></textarea>
+            <button type="submit" id="submit-btn" class="submit-btn">
+              送出留言
+            </button>
+          </form>
         </div>
 
         <!-- 狀態B：未登入顯示的區塊 -->
         <div id="auth-logged-out" class="auth-section">
-            <p style="color: #666; margin-top: 0; margin-bottom: 15px;">為維護留言品質，請先驗證您的身分才能發表留言</p>
-            <button id="login-btn" class="google-btn">使用 Google 帳號登入</button>
+          <p style="color: #666; margin-top: 0; margin-bottom: 15px">
+            為維護留言品質，請先驗證您的身分才能發表留言
+          </p>
+          <button id="login-btn" class="google-btn">
+            使用 Google 帳號登入
+          </button>
         </div>
 
         <!-- 公開留言列表顯示區 (交由 JS 動態生成) -->
         <div id="messages-list" class="messages-list">
-            <div class="empty-message">資料載入中，請稍候...</div>
+          <div class="empty-message">資料載入中，請稍候...</div>
         </div>
-        
-        <!-- === JavaScript 動態控制區塊結束 === -->
 
+        <!-- === JavaScript 動態控制區塊結束 === -->
       </div>
     </main>
 
     <!-- Footer 區塊 -->
     <footer class="footer">
       <div class="footer-container">
-        <div class="footer-info"><div class="footer-logo">虹美餐飲</div><p>提供最誠摯的手作美味，給您最安心的餐飲體驗。</p></div>
-        <div class="footer-contact"><h4>聯絡我們</h4><div class="contact-section"><div class="contact-label">【午、晚餐服務】</div><ul><li><strong>電話：</strong>(08) 738-5101</li><li><strong>地址：</strong>屏東縣屏東市豐榮街32號</li></ul></div></div>
-        <div class="footer-map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3683.7441589139265!2d120.48512537594537!3d22.681966179415842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e1762d980164b%3A0x8849645a499f57d0!2zOTEw5bGP5p2x57ij5bGP5p2x5biC6LGQ5qau6KGXMzLomZ8!5e0!3m2!1szh-TW!2stw!4v1705820000000!5m2!1szh-TW!2stw" width="100%" height="200" style="border: 0; border-radius: 8px" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        <div class="footer-info">
+          <div class="footer-logo">虹美餐飲</div>
+          <p>提供最誠摯的手作美味，給您最安心的餐飲體驗。</p>
+        </div>
+        <div class="footer-contact">
+          <h4>聯絡我們</h4>
+          <div class="contact-section">
+            <div class="contact-label">【午、晚餐服務】</div>
+            <ul>
+              <li><strong>電話：</strong>(08) 738-5101</li>
+              <li><strong>地址：</strong>屏東縣屏東市豐榮街32號</li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-map">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3683.7441589139265!2d120.48512537594537!3d22.681966179415842!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e1762d980164b%3A0x8849645a499f57d0!2zOTEw5bGP5p2x57ij5bGP5p2x5biC6LGQ5qau6KGXMzLomZ8!5e0!3m2!1szh-TW!2stw!4v1705820000000!5m2!1szh-TW!2stw"
+            width="100%"
+            height="200"
+            style="border: 0; border-radius: 8px"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
       </div>
       <div class="footer-bottom">© 2026 虹美餐飲 版權所有</div>
     </footer>
@@ -156,7 +469,13 @@
     <!-- ========================================== -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-      import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+      import {
+        getAuth,
+        signInWithPopup,
+        GoogleAuthProvider,
+        signOut,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
       // ==========================================
       // ⚠️ 1. 請確認這裡是你專屬的 Firebase 金鑰
@@ -167,13 +486,14 @@
         projectId: "hongmei-board",
         storageBucket: "hongmei-board.firebasestorage.app",
         messagingSenderId: "905688212360",
-        appId: "1:905688212360:web:e4cad49a1fcf69df7e903d"
+        appId: "1:905688212360:web:e4cad49a1fcf69df7e903d",
       };
 
       // ==========================================
       // ⚠️ 2. 請將這串網址換成你剛剛部署的 Apps Script (GAS) 網址
       // ==========================================
-      const GAS_URL = "https://script.google.com/macros/s/AKfycbxqUz-L6Y3dFOPxPgkB8DI6X7m1DSR14M9cdZGWc-pmadxmPqWBNrDuGDygApbDvLTeug/exec";
+      const GAS_URL =
+        "https://script.google.com/macros/s/AKfycbxqUz-L6Y3dFOPxPgkB8DI6X7m1DSR14M9cdZGWc-pmadxmPqWBNrDuGDygApbDvLTeug/exec";
 
       // 初始化 Firebase
       const app = initializeApp(firebaseConfig);
@@ -181,15 +501,15 @@
       const provider = new GoogleAuthProvider();
 
       // 取得網頁上的 HTML 元素
-      const authLoggedIn = document.getElementById('auth-logged-in');
-      const authLoggedOut = document.getElementById('auth-logged-out');
-      const userEmailDisplay = document.getElementById('user-email-display');
-      const loginBtn = document.getElementById('login-btn');
-      const logoutBtn = document.getElementById('logout-btn');
-      const postForm = document.getElementById('post-form');
-      const messageContent = document.getElementById('message_content');
-      const messagesList = document.getElementById('messages-list');
-      const submitBtn = document.getElementById('submit-btn');
+      const authLoggedIn = document.getElementById("auth-logged-in");
+      const authLoggedOut = document.getElementById("auth-logged-out");
+      const userEmailDisplay = document.getElementById("user-email-display");
+      const loginBtn = document.getElementById("login-btn");
+      const logoutBtn = document.getElementById("logout-btn");
+      const postForm = document.getElementById("post-form");
+      const messageContent = document.getElementById("message_content");
+      const messagesList = document.getElementById("messages-list");
+      const submitBtn = document.getElementById("submit-btn");
 
       // ==========================================
       // 系統功能 A：監聽登入狀態並切換畫面
@@ -197,20 +517,23 @@
       onAuthStateChanged(auth, (user) => {
         if (user) {
           // 已登入：顯示表單，隱藏登入按鈕
-          authLoggedIn.style.display = 'block';
-          authLoggedOut.style.display = 'none';
+          authLoggedIn.style.display = "block";
+          authLoggedOut.style.display = "none";
           userEmailDisplay.textContent = user.email;
         } else {
           // 未登入：顯示登入按鈕，隱藏表單
-          authLoggedIn.style.display = 'none';
-          authLoggedOut.style.display = 'block';
-          userEmailDisplay.textContent = '';
+          authLoggedIn.style.display = "none";
+          authLoggedOut.style.display = "block";
+          userEmailDisplay.textContent = "";
         }
       });
 
       // 綁定登入與登出按鈕事件
-      if (loginBtn) loginBtn.addEventListener('click', () => signInWithPopup(auth, provider));
-      if (logoutBtn) logoutBtn.addEventListener('click', () => signOut(auth));
+      if (loginBtn)
+        loginBtn.addEventListener("click", () =>
+          signInWithPopup(auth, provider),
+        );
+      if (logoutBtn) logoutBtn.addEventListener("click", () => signOut(auth));
 
       // ==========================================
       // 系統功能 B：從試算表讀取留言 (GET)
@@ -219,76 +542,88 @@
         try {
           const response = await fetch(GAS_URL);
           const messages = await response.json();
-          
-          messagesList.innerHTML = ''; // 清空載入中文字
-          
-          if(messages.length === 0) {
-             messagesList.innerHTML = '<div class="empty-message">目前還沒有顧客留言喔，來搶頭香吧！</div>';
-             return;
+
+          messagesList.innerHTML = ""; // 清空載入中文字
+
+          if (messages.length === 0) {
+            messagesList.innerHTML =
+              '<div class="empty-message">目前還沒有顧客留言喔，來搶頭香吧！</div>';
+            return;
           }
 
           // 將陣列裡的每一筆資料轉成 HTML
-          messages.forEach(msg => {
-             // 處理換行符號
-             const formattedContent = msg.content.replace(/\n/g, '<br>');
-             
-             const messageCard = `
+          messages.forEach((msg) => {
+            // 1. 處理換行符號
+            const formattedContent = msg.content.replace(/\n/g, "<br>");
+
+            // 2. 處理時間格式：將 ISO 機器時間轉換為台灣在地時間
+            const dateObj = new Date(msg.timestamp);
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, "0");
+            const d = String(dateObj.getDate()).padStart(2, "0");
+            const h = String(dateObj.getHours()).padStart(2, "0");
+            const min = String(dateObj.getMinutes()).padStart(2, "0");
+            // 組合出 YYYY-MM-DD HH:mm 格式
+            const displayTime = `${y}-${m}-${d} ${h}:${min}`;
+
+            const messageCard = `
                 <div class="message-card">
                     <div class="message-header">
                         <span class="message-author">${msg.email}</span>
-                        <span class="message-time">${msg.timestamp}</span>
+                        <!-- 這裡改用排版好的 displayTime -->
+                        <span class="message-time">${displayTime}</span>
                     </div>
                     <div class="message-content">
                         ${formattedContent}
                     </div>
                 </div>
              `;
-             messagesList.insertAdjacentHTML('beforeend', messageCard);
+            messagesList.insertAdjacentHTML("beforeend", messageCard);
           });
         } catch (error) {
           console.error("載入資料失敗:", error);
-          messagesList.innerHTML = '<div class="empty-message">無法連線至資料庫，請稍後再試。</div>';
+          messagesList.innerHTML =
+            '<div class="empty-message">無法連線至資料庫，請稍後再試。</div>';
         }
       }
 
       // ==========================================
       // 系統功能 C：傳送新留言到試算表 (POST)
       // ==========================================
-      postForm.addEventListener('submit', async (e) => {
+      postForm.addEventListener("submit", async (e) => {
         e.preventDefault(); // 防止網頁重新整理
-        
+
         const user = auth.currentUser;
         if (!user) return; // 二次確認是否有登入
-        
+
         const content = messageContent.value.trim();
         if (!content) return;
 
         // 改變按鈕狀態，避免重複點擊
-        submitBtn.textContent = '傳送中...';
+        submitBtn.textContent = "傳送中...";
         submitBtn.disabled = true;
 
         try {
           // 打包要傳送的資料
           const formData = new URLSearchParams();
-          formData.append('email', user.email);
-          formData.append('content', content);
+          formData.append("email", user.email);
+          formData.append("content", content);
 
           // 發送 POST 請求到 Google 試算表
           await fetch(GAS_URL, {
-            method: 'POST',
-            body: formData
+            method: "POST",
+            body: formData,
           });
 
           // 送出成功後：清空輸入框，重新讀取留言
-          messageContent.value = '';
+          messageContent.value = "";
           await loadMessages();
-          
         } catch (error) {
           console.error("送出失敗:", error);
-          alert('留言送出失敗，請確認網路連線。');
+          alert("留言送出失敗，請確認網路連線。");
         } finally {
           // 恢復按鈕狀態
-          submitBtn.textContent = '送出留言';
+          submitBtn.textContent = "送出留言";
           submitBtn.disabled = false;
         }
       });
