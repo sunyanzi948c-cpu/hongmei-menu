@@ -403,7 +403,7 @@
       <nav id="mainNav">
         <a href="index.html">虹美廚坊</a>
         <a href="news.html">最新菜單消息</a>
-        <a href="article.html">營養文章</a>
+        <a href="article.html" class="active">營養文章</a>
         <a href="analysis.html">營養成份分析</a>
         <a href="about.html">關於虹美</a>
         <a href="board.html">意見留言板</a>
@@ -956,37 +956,25 @@
         });
       });
 
-      // 初始化
+      // --- 強化版的導覽列 Active 判斷 ---
       window.addEventListener("DOMContentLoaded", () => {
         filteredCards = allCards;
         updateDisplay();
 
-        // --- 強化版的導覽列 Active 判斷 ---
-        // 取得當前網址路徑並去除結尾斜線，轉小寫
-        const currentPath = window.location.pathname
-          .replace(/\/$/, "")
-          .toLowerCase();
+        // 1. 抓取目前網址的最後一個檔名 (例如 article.html)
+        const currentUrl = window.location.pathname.split("/").pop();
         const navLinks = document.querySelectorAll("#mainNav a");
-
+        
         navLinks.forEach((link) => {
-          // 取得 href 並去除 .html 後綴來比對
-          let linkHref = link.getAttribute("href").toLowerCase();
-          let linkClean = linkHref.replace(".html", "");
-
-          // 移除舊有類別
+          // 2. 抓取每個連結的 href，並只取檔名部分
+          const linkHref = link.getAttribute("href");
+          const cleanLinkHref = linkHref ? linkHref.split("/").pop() : "";
+          
+          // 3. 先移除所有 active
           link.classList.remove("active");
-
-          // 判斷邏輯：
-          // 1. 如果網址包含該檔名 (例如 /article 包含 article)
-          // 2. 或是首頁特殊處理
-          if (currentPath.endsWith(linkClean)) {
-            link.classList.add("active");
-          }
-          // 針對首頁的例外處理
-          else if (
-            (currentPath === "" || currentPath.includes("index")) &&
-            linkClean === "index"
-          ) {
+          
+          // 4. 比對成功就加上 active (空字串代表首頁)
+          if (currentUrl === cleanLinkHref || (currentUrl === "" && cleanLinkHref === "index.html")) {
             link.classList.add("active");
           }
         });
