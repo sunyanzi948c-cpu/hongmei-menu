@@ -105,18 +105,21 @@
         justify-content: center;
         align-items: center;
         gap: 15px;
-        flex-wrap: wrap; 
+        flex-wrap: wrap;
       }
       .cert-logo {
-        height: 48px; /* 電腦版最佳高度 */
+        height: 85px; /* 從 48px 大幅放大，讓內部文字清晰 */
         object-fit: contain;
-        background-color: #000; /* 若原圖為透明底，加上黑底可凸顯 IDF 標誌 */
-        border-radius: 4px;
-        padding: 2px 5px;
+        border-radius: 8px;
+        padding: 5px;
+        background-color: #000; /* 統一黑底修飾邊界 */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* 增加陰影讓它更立體 */
       }
+
       .cert-text {
-        font-size: 1.05rem;
-        letter-spacing: 1px;
+        font-size: 1.25rem; /* 文字同步放大 */
+        letter-spacing: 1.5px;
+        margin-left: 10px;
       }
       .cert-text strong {
         color: #ffca28; /* 重點字使用黃色 */
@@ -126,16 +129,16 @@
       @media screen and (max-width: 767px) {
         .cert-container {
           flex-direction: column;
-          gap: 6px;
+          gap: 10px;
         }
         .cert-logo {
-          height: 38px;
+          height: 65px;
         }
         .cert-text {
-          font-size: 0.9rem;
+          font-size: 1.05rem;
         }
       }
-      
+
       /* --- 3. 內容區容器 --- */
       .container {
         max-width: 1200px;
@@ -864,9 +867,13 @@
     <div class="cert-banner">
       <div class="cert-container">
         <!-- 附註：請確認您的圖片副檔名是 .webp 還是 .jpg，並在此更改 -->
-        <img src="./image/IDF-LOGO官網.webp" alt="IDF 李氏聯合診所認證" class="cert-logo" />
+        <img
+          src="./image/IDF-LOGO官網.webp"
+          alt="IDF 李氏聯合診所認證"
+          class="cert-logo" />
         <span class="cert-text">
-          <strong>李氏聯合診所 ✕ 國際糖尿病聯盟 (IDF)</strong> 照護卓越中心 專業把關
+          <strong>李氏聯合診所 ✕ 國際糖尿病聯盟 (IDF)</strong> 照護卓越中心
+          專業把關
         </span>
       </div>
     </div>
