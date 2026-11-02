@@ -90,6 +90,52 @@
         left: 0;
       }
 
+      /* --- 方案 B：專業認證帶樣式 --- */
+      .cert-banner {
+        background-color: #222; /* 呼應首尾的深色系，凸顯專業感 */
+        color: #fff;
+        padding: 12px 15px;
+        border-bottom: 4px solid #ffca28; /* 虹美招牌黃色底線 */
+        text-align: center;
+      }
+      .cert-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap; 
+      }
+      .cert-logo {
+        height: 48px; /* 電腦版最佳高度 */
+        object-fit: contain;
+        background-color: #000; /* 若原圖為透明底，加上黑底可凸顯 IDF 標誌 */
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+      .cert-text {
+        font-size: 1.05rem;
+        letter-spacing: 1px;
+      }
+      .cert-text strong {
+        color: #ffca28; /* 重點字使用黃色 */
+      }
+
+      /* 手機版自適應微調 */
+      @media screen and (max-width: 767px) {
+        .cert-container {
+          flex-direction: column;
+          gap: 6px;
+        }
+        .cert-logo {
+          height: 38px;
+        }
+        .cert-text {
+          font-size: 0.9rem;
+        }
+      }
+      
       /* --- 3. 內容區容器 --- */
       .container {
         max-width: 1200px;
@@ -813,6 +859,18 @@
     <div class="main-banner">
       <img src="./image/橫幅虹美 (1).png" alt="虹美餐飲橫幅大圖" />
     </div>
+
+    <!-- === 新增：方案 B 專業認證帶 === -->
+    <div class="cert-banner">
+      <div class="cert-container">
+        <!-- 附註：請確認您的圖片副檔名是 .webp 還是 .jpg，並在此更改 -->
+        <img src="./image/IDF-LOGO官網.webp" alt="IDF 李氏聯合診所認證" class="cert-logo" />
+        <span class="cert-text">
+          <strong>李氏聯合診所 ✕ 國際糖尿病聯盟 (IDF)</strong> 照護卓越中心 專業把關
+        </span>
+      </div>
+    </div>
+    <!-- ========================== -->
 
     <main class="container">
       <h2 class="section-title">最新消息</h2>
