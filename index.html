@@ -825,6 +825,20 @@
         height: auto;
         display: block;
       }
+
+      /* --- 購物車教學提示動畫 --- */
+      @keyframes bounceUpDown {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      .tutorial-bounce {
+        animation: bounceUpDown 1.5s infinite ease-in-out;
+      }
     </style>
   </head>
   <body>
@@ -1838,6 +1852,41 @@
           id="min-icon"
           >−</span
         >
+
+        <!-- === 新增：縮放教學提示框 === -->
+        <div
+          id="cart-tutorial"
+          class="tutorial-bounce"
+          style="
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 35px;
+            background-color: #ffca28;
+            color: #222;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            white-space: nowrap;
+          ">
+          點此可縮小 / 展開清單 👆
+          <!-- 提示框上方的小三角形 -->
+          <div
+            style="
+              position: absolute;
+              top: -6px;
+              right: 15px;
+              width: 0;
+              height: 0;
+              border-left: 6px solid transparent;
+              border-right: 6px solid transparent;
+              border-bottom: 6px solid #ffca28;
+            "></div>
+        </div>
+        <!-- ========================== -->
       </h4>
 
       <div id="cart-content-wrapper">
@@ -1931,11 +1980,24 @@
 
       // 2. 購物車資料處理
       let cart = [];
+      let hasShownTutorial = false; // 新增：用來紀錄是否已經顯示過教學
 
       function addToCart(name, price) {
         cart.push({ name, price });
         updateCartUI();
         document.getElementById("cart-panel").style.display = "block";
+
+        // === 新增：顯示教學提示的邏輯 ===
+        if (!hasShownTutorial) {
+          const tutorial = document.getElementById("cart-tutorial");
+          tutorial.style.display = "block"; // 顯示提示
+          hasShownTutorial = true; // 標記為已顯示過
+
+          // 5秒後自動隱藏提示框
+          setTimeout(() => {
+            tutorial.style.display = "none";
+          }, 5000);
+        }
       }
 
       function updateCartUI() {
